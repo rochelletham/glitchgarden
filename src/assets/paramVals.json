@@ -1,0 +1,24 @@
+{
+    "paramCorrectRanges": {
+        "delayDur":
+            {
+                "beginner": [50,300],
+                "intermediate": [50,200],
+                "advanced": [50,150]
+            }
+        ,
+        "fdbkGain":
+            {
+                "beginner": [-0.5,0.5],
+                "intermediate": [-0.15,0.15],
+                "advanced": [-0.5,0.5]
+            }
+        ,
+        "wetDry":
+            {
+                "beginner": [0.1,0.6],
+                "intermediate": [0.2,0.5],
+                "advanced": [0.3,0.4]
+            }
+    }
+}
