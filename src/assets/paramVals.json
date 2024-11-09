@@ -2,9 +2,9 @@
     "paramCorrectRanges": {
         "delayDur":
             {
-                "beginner": [50,300],
-                "intermediate": [50,200],
-                "advanced": [50,150]
+                "beginner": [-200,200],
+                "intermediate": [-100, 100],
+                "advanced": [-50,50]
             }
         ,
         "fdbkGain":
@@ -16,9 +16,31 @@
         ,
         "wetDry":
             {
-                "beginner": [0.1,0.6],
-                "intermediate": [0.2,0.5],
-                "advanced": [0.3,0.4]
+                "beginner": [-0.3,0.3],
+                "intermediate": [-0.1,0.1],
+                "advanced": [0,0]
+            }
+    },
+    "answerRange": {   
+        "delayDur":
+            {
+                "beginner": [170,710],
+                "intermediate": [-100, 100],
+                "advanced": [0,1000]
+            }
+        ,
+        "fdbkGain":
+            {
+                "beginner": [-0.5,0.5],
+                "intermediate": [-0.15,0.15],
+                "advanced": [0,1]
+            }
+        ,
+        "wetDry":
+            {
+                "beginner": [-0.3,0.3],
+                "intermediate": [0,1],
+                "advanced": [0,1]
             }
     }
 }

@@ -2,7 +2,8 @@
 
 import '../assets/tailwind.css';
 // import StartButton from './StartButton.vue';
-import checkAnswer from '@/utils/checkAnswer';
+import checkAnswer from '@/utils/AnswerHandling';
+import generateAnswer from '@/utils/GenerateAnswer';
 
 export default {
   name: 'DelayContent',
@@ -17,11 +18,20 @@ export default {
       dryGainNode: null,
       wetGainNode: null,
       wetDryVal: 0.5,   // 0 means 100% dry & 0% wet, 1 means 100% wet & 0% dry
+      passGainNode: null,
       score: null,
       delayScore: null, 
       fdbkScore: null, 
       wetDryScore: null,
       showScore: false,
+      yoursActive: true,   
+      toggleMode: false,  // toggle state for yours vs expected audio
+      mute: false,        // mute/unmute audio
+      play: false,
+      // answer key variables
+      ansDelayTimeVal: 0.5, 
+      ansFeedbackGain: 0.5,
+      ansWetDryVal: 0.5,  
     };
   },
   mounted() {
@@ -53,9 +63,21 @@ export default {
     this.delayNode.connect(this.wetGainNode);
     this.wetGainNode.gain.value = this.wetDryVal;
     console.log("intialize wet gain: ", this.wetGainNode.gain.value);
-    this.wetGainNode.connect(this.context.destination);
-
     
+    // used for muting audio 
+    this.passGainNode = this.context.createGain();
+    this.passGainNode.gain.value = 1.0;
+    this.wetGainNode.connect(this.passGainNode);
+    this.passGainNode.connect(this.context.destination);
+
+    // now randomly generating the answer 
+    this.ansDelayTimeVal = generateAnswer(0,1.0);
+    this.ansFeedbackGain = generateAnswer(0,0.6);
+    this.ansWetDryVal = generateAnswer(0.0,1.0);
+    console.log("delayTime Ans: ", (this.ansDelayTimeVal*1000),
+                "\nfdbk gain Ans: ", this.ansFeedbackGain,
+                "\nwetdry Ans: ", this.ansWetDryVal);
+
   },
   methods: {
     startAudioContext() {
@@ -68,113 +90,187 @@ export default {
         console.log("suspended context is now resumed");
       }
     },
-    playAudio() {
-      if (this.context.state === 'suspended') {
+    playPauseAudio() {
+      this.play = !this.play;
+      if (this.context.state === 'suspended') { // restart audio context
         this.context.resume();
       }
-      this.$refs.audioElement.play();
-    },
-    pauseAudio() {
-      if (this.context.state === 'suspended') {
-        this.context.resume();
+      if (this.play) {
+        this.$refs.audioElement.play();
+        document.querySelector('#playButton').textContent = 'Pause';
+      } else {
+        this.$refs.audioElement.pause();
+        document.querySelector('#playButton').textContent = 'Play';
       }
-      this.$refs.audioElement.pause();
     },
     delayTimeUpdate(event) {
-      // if (currMode == Mode.YOURS)
-      this.delayTimeVal = event.target.value;
-      // this.delayNode.delayTime.value = this.delayTimeVal;
-      this.delayNode.delayTime.setValueAtTime(event.target.value, this.context.currentTime);
+      if (this.yoursActive) {
+        this.delayTimeVal = event.target.value;
+        this.delayNode.delayTime.setValueAtTime(event.target.value, this.context.currentTime);
+      } 
     },
     feedbackGainUpdate(event) {
-      // if (currMode == Mode.YOURS)
-      this.feedbackGain = event.target.value;
-      this.feedbackNode.gain.value = this.feedbackGain;
+      if (this.yoursActive) {
+        this.feedbackGain = event.target.value;
+        this.feedbackNode.gain.setValueAtTime(event.target.value, this.context.currentTime);
+      } 
     },
     wetDryUpdate(event) {
-      // if (currMode == Mode.YOURS)
-      this.wetDryVal = event.target.value;
-      this.dryGainNode.gain.value = 1.0 - this.wetDryVal;
-      this.wetGainNode.gain.value = this.wetDryVal;
-      console.log("dry, wet ", this.dryGainNode.gain.value, this.wetGainNode.gain.value);
-    
+      if (this.yoursActive) {
+        this.wetDryVal = event.target.value;
+        this.dryGainNode.gain.value = 1.0 - this.wetDryVal;
+        this.wetGainNode.gain.value = this.wetDryVal;
+        this.dryGainNode.gain.setValueAtTime(this.dryGainNode.gain.value, this.context.currentTime);
+        this.wetGainNode.gain.setValueAtTime(this.wetGainNode.gain.value, this.context.currentTime);
+      } 
+    },
+    muteAudio(event) {
+      this.mute = !this.mute;
+      if (this.mute) {
+        this.dryGainNode.gain.setValueAtTime(0, this.context.currentTime);
+        this.passGainNode.gain.setValueAtTime(0, this.context.currentTime);
+        document.querySelector('#muteButton').textContent = 'Unmute';
+      } else {
+        this.dryGainNode.gain.setValueAtTime(1.0, this.context.currentTime);
+        this.passGainNode.gain.setValueAtTime(1.0, this.context.currentTime);
+        document.querySelector('#muteButton').textContent = 'Mute';
+      }
     },
     checkAnswer(event) {
       // *1000 because in milliseconds
       [this.delayScore, this.fdbkScore, this.wetDryScore, this.score] = 
-      checkAnswer((this.delayTimeVal)*1000, this.feedbackGain, this.wetDryVal);  
+      checkAnswer((this.delayTimeVal)*1000, this.feedbackGain, this.wetDryVal,
+                  (this.ansDelayTimeVal)*1000, this.ansFeedbackGain, this.ansWetDryVal);  
       this.showScore = true;
     },
-    
+    switchAudioMode(event) {
+      this.toggleMode = !this.toggleMode;   // toggleMode = false --> yoursActive = true
+      this.yoursActive = !this.yoursActive;
+      // TODO: modularize & fix this code -- right now very crude
+      if (this.yoursActive) {
+        this.delayNode.delayTime.setValueAtTime(this.delayTimeVal, this.context.currentTime);
+        this.feedbackNode.gain.setValueAtTime(this.feedbackGain, this.context.currentTime);
+        this.dryGainNode.gain.setValueAtTime(1.0 - this.wetDryVal, this.context.currentTime);
+        this.wetGainNode.gain.setValueAtTime(this.wetDryVal, this.context.currentTime);
+      } else {
+        this.delayNode.delayTime.setValueAtTime(this.ansDelayTimeVal, this.context.currentTime);
+        this.feedbackNode.gain.setValueAtTime(this.ansFeedbackGain, this.context.currentTime);
+        this.dryGainNode.gain.setValueAtTime(1.0 - this.ansWetDryVal, this.context.currentTime);
+        this.wetGainNode.gain.setValueAtTime(this.ansDelayTimeVal, this.context.currentTime);
+      }
+    },
+    generateAnswer(event) {
+      this.ansDelayTimeVal = generateAnswer(0,1.0);
+      this.ansFeedbackGain = generateAnswer(0,0.6);
+      this.ansWetDryVal = generateAnswer(0.0,1.0);
+      console.log("new answer:",
+                "\ndelayTime Ans: ", (this.ansDelayTimeVal*1000), 
+                "\nfdbk gain Ans: ", this.ansFeedbackGain,
+                "\nwetdry Ans: ", this.ansWetDryVal);
+    }
   },
 };
 
 </script>
 
 <template>
-<!-- navbar from flowbite https://flowbite.com/docs/components/navbar/ -->
-<nav class="border-gray-200 bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
-  <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-    <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
-        <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Audio Effects</span>
-    </a>
-    <button data-collapse-toggle="navbar-hamburger" type="button" class="inline-flex items-center justify-center p-2 w-10 h-10 text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-hamburger" aria-expanded="false">
-      <span class="sr-only">Open main menu</span>
-      <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
-          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
-      </svg>
-    </button>
-    <div class="hidden w-full" id="navbar-hamburger">
-      <ul class="flex flex-col font-medium mt-4 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
-        <!-- <li>
-          <a href="#" class="block py-2 px-3 text-white bg-blue-700 rounded dark:bg-blue-600" aria-current="page">Home</a>
-        </li> -->
-        
-      </ul>
+  <!-- navbar from flowbite https://flowbite.com/docs/components/navbar/ -->
+  <nav class="border-gray-200 bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
+    <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+      <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
+          <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Audio Effects</span>
+      </a>
+      <button data-collapse-toggle="navbar-hamburger" type="button" class="inline-flex items-center justify-center p-2 w-10 h-10 text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="navbar-hamburger" aria-expanded="false">
+        <span class="sr-only">Open main menu</span>
+        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
+        </svg>
+      </button>
+      <div class="hidden w-full" id="navbar-hamburger">
+        <ul class="flex flex-col font-medium mt-4 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
+          <!-- <li>
+            <a href="#" class="block py-2 px-3 text-white bg-blue-700 rounded dark:bg-blue-600" aria-current="page">Home</a>
+          </li> -->
+          
+        </ul>
+      </div>
     </div>
-  </div>
-</nav>
+  </nav>
 
   <div class="title">
     <h1 class="black">Delay</h1>
   </div>
-  <div>
-  <button @click="startAudioContext" type="button" class="text-white 
-  bg-purple-700 hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 
-  dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">start audio context</button>  
-  <br><br>
-    <!-- <button @click="playAudio" class="bg-blue-200">Play</button> -->
+    <div>
+    <!-- TODO: on click, change playbutton to pause state -->
+    <button @click="playPauseAudio" id="playButton" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
+      <!-- <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+        <path d="M15 7.26795C16.3333 8.03775 16.3333 9.96225 15 10.7321L3 17.6603C1.66667 18.4301 1.01267e-06 17.4678 1.07997e-06 15.9282L1.68565e-06 2.0718C1.75295e-06 0.532196 1.66667 -0.430054 3 0.339746L15 7.26795Z"/>
+      </svg> -->
+      <span>Play</span>
+    </button>
+    <button @click="loopAudio" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
+      <!-- TODO: svg for loop -->
+      <!-- <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"></svg> -->
+      <span>Loop</span>
+    </button>
+    <button @click="muteAudio" id="muteButton" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
+      <!-- TODO: svg for mute -->
+      <!-- <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"></svg> -->
+      <span>Mute</span>
+    </button>
+    
+    </div>
+    <div>
+      <br>
     <audio ref="audioElement" controls>
       <source src="../soundfiles/audio.mp3" type="audio/mpeg" />
       Your browser does not support the audio tag.
     </audio>
+    <button @click="switchAudioMode">
+    <div class="w-16 h-10 flex items-center bg-gray-300 rounded-full p-1 duration-300 ease-in-out" :class="{ 'bg-blue-400': !yoursActive}">
+      <div class="bg-white w-7 h-7 rounded-full shadow-md transform duration-300 ease-in-out" :class="{ 'translate-x-6': !yoursActive}"></div>
+    </div>
+    </button>
+    </div>
     <br>
-    <input type="range" @input="delayTimeUpdate" v-model="this.delayTimeVal" id="delayDur"
-     name="Delay Duration" min="0" max="1" step="0.01" value="0.0" class="efx-slider" >
-    <p>duration: {{ (this.delayTimeVal)*1000 }} ms</p>
-    
-    <input type="range" @input="feedbackGainUpdate" v-model="this.feedbackGain" id="fdbkGain"
-     name="Delay Duration" min="0" max="1" step=".1" value="0.0" class="efx-slider" >
-    <p>feedback gain: {{ (this.feedbackGain) }}</p>
-    
-    <input type="range" @input="wetDryUpdate" v-model="this.wetDryVal" id="wetDryMix"
-     name="Wet/Dry Mix" min="0" max="1" step="0.1" class="efx-slider" >
-    <p>dry/wet mix {{ (this.wetDryVal) }}</p>
-    <br>
-    <button @click="checkAnswer" type="button" class="text-white 
-  bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 
-  font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 
-  dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-900">check answer</button>  
-    <br><br>
-    <p v-if="showScore">delay duration: {{ this.delayScore }}</p>
-    <p v-if="showScore">feedback gain: {{ this.fdbkScore }}</p>
-    <p v-if="showScore">dry/wet mix: {{ this.wetDryScore }}</p>
-    <p v-if="showScore">overall score: {{ this.score }} %</p>
-  </div>
+    <div>
+      <input type="range" @input="delayTimeUpdate" v-model="this.delayTimeVal" id="delayDur"
+      name="Delay Duration" min="0" max="1" step="0.01" value="0.0" class="efx-slider" >
+      <p>duration: {{ (this.delayTimeVal)*1000 }} ms</p>
+      
+      <input type="range" @input="feedbackGainUpdate" v-model="this.feedbackGain" id="fdbkGain"
+      name="Delay Duration" min="0" max="1" step=".1" value="0.0" class="efx-slider" >
+      <p>feedback gain: {{ (this.feedbackGain) }}</p>
+      
+      <input type="range" @input="wetDryUpdate" v-model="this.wetDryVal" id="wetDryMix"
+      name="Wet/Dry Mix" min="0" max="1" step="0.1" class="efx-slider" >
+      <p>dry/wet mix {{ (this.wetDryVal) }}</p>
+      <br>
+      <button @click="checkAnswer" type="button" class="text-white 
+    bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 
+    font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 
+    dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-900">check answer</button>  
+    <button @click="generateAnswer" type="button" class="space-x-[15px] text-white 
+    bg-blue-600 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 
+    font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 
+    dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900">new exercise</button> 
+      <br><br>
+      <p v-if="showScore">delay duration: {{ this.delayScore }}</p>
+      <p v-if="showScore">feedback gain: {{ this.fdbkScore }}</p>
+      <p v-if="showScore">dry/wet mix: {{ this.wetDryScore }}</p>
+      <p v-if="showScore">overall score: {{ this.score }} %</p>
+      <br class="vert-space">
+    </div>
 
 </template>
 
 <style scoped>
+button {
+  margin: 5px;
+}
+.vert-space {
+  margin-top: 100px;
+}
 h1 {
   font-weight: 500;
   font-size: 2.6rem;
@@ -216,6 +312,7 @@ h3 {
   border-radius: 3px;
   background: rgb(229, 225, 233);
   width:50%;
+  max-width: 500px;
   outline: none;
   opacity: 0.85;
 }
@@ -229,7 +326,7 @@ h3 {
     -webkit-appearance: none; 
     appearance: none;
     width: 12px; 
-    height: 30px; 
+    height: 35px; 
     background-color: rgb(255, 255, 255);
     border: 2px solid rgb(184, 183, 183);
     border-radius:  3px;
@@ -240,7 +337,7 @@ h3 {
   /* animation for highlight */
   transition: .05s ease-in-out; 
   border-color: rgb(220, 220, 220);
-  height: 35px;
+  height: 40px;
   /* box-shadow: h-offset v-offset blur-radius spread-radius color inset; */
   box-shadow: 0 0 0 2px rgb(237, 236, 236);
 }
