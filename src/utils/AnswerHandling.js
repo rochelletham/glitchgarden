@@ -3,7 +3,7 @@ import answers from '../assets/paramVals.json'
 
 // console.log(answers.paramCorrectRanges.delayTime.beginner);
 const withinRange = (num, ans, [min, max]) => {
-    return (num >= ans + min && num <= ans + max);
+    return ((num >= Number(ans) + Number(min)) && (num <= Number(ans) + Number(max)));
 };
 
 // calculates the average of the scores
@@ -27,6 +27,7 @@ const checkAnswer = (userDelayDur, userFdbkGain, userWetDryVal,
         "\ndelayTime Ans: ", ansDelayDur, 
         "\nfdbk gain Ans: ", ansFdbkGain,
         "\nwetdry Ans: ", ansWetDryVal);
+    
     const delayScore = withinRange(userDelayDur, ansDelayDur, answers.paramCorrectRanges.delayDur.beginner);
     const fdbkScore = withinRange(userFdbkGain, ansFdbkGain, answers.paramCorrectRanges.fdbkGain.beginner);
     const wetDryScore = withinRange(userWetDryVal, ansWetDryVal, answers.paramCorrectRanges.wetDry.beginner)

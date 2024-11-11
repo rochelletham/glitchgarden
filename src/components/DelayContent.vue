@@ -28,10 +28,12 @@ export default {
       toggleMode: false,  // toggle state for yours vs expected audio
       mute: false,        // mute/unmute audio
       play: false,
+      loopEnabled: false,
       // answer key variables
       ansDelayTimeVal: 0.5, 
       ansFeedbackGain: 0.5,
       ansWetDryVal: 0.5,  
+      exerciseNum: 1,
     };
   },
   mounted() {
@@ -48,7 +50,6 @@ export default {
     });
     this.dryGainNode = this.context.createGain();
     this.dryGainNode.gain.value = 1.0;    // default to dry 100%
-    console.log("intialize dry gain: ", this.dryGainNode.gain.value);
     source.connect(this.dryGainNode);
     this.dryGainNode.connect(this.context.destination);
 
@@ -62,7 +63,6 @@ export default {
     this.wetGainNode = this.context.createGain();
     this.delayNode.connect(this.wetGainNode);
     this.wetGainNode.gain.value = this.wetDryVal;
-    console.log("intialize wet gain: ", this.wetGainNode.gain.value);
     
     // used for muting audio 
     this.passGainNode = this.context.createGain();
@@ -97,10 +97,18 @@ export default {
       }
       if (this.play) {
         this.$refs.audioElement.play();
-        document.querySelector('#playButton').textContent = 'Pause';
+        document.querySelector('#playButton').textContent = 'pause';
       } else {
         this.$refs.audioElement.pause();
-        document.querySelector('#playButton').textContent = 'Play';
+        document.querySelector('#playButton').textContent = 'play';
+      }
+    },
+    loopAudio() {
+      this.loopEnabled = !this.loopEnabled;
+      if (this.loopEnabled) {
+        document.querySelector('#loopButton').textContent = 'no loop';
+      } else {
+        document.querySelector('#loopButton').textContent = 'loop';
       }
     },
     delayTimeUpdate(event) {
@@ -129,11 +137,11 @@ export default {
       if (this.mute) {
         this.dryGainNode.gain.setValueAtTime(0, this.context.currentTime);
         this.passGainNode.gain.setValueAtTime(0, this.context.currentTime);
-        document.querySelector('#muteButton').textContent = 'Unmute';
+        document.querySelector('#muteButton').textContent = 'unmute';
       } else {
         this.dryGainNode.gain.setValueAtTime(1.0, this.context.currentTime);
         this.passGainNode.gain.setValueAtTime(1.0, this.context.currentTime);
-        document.querySelector('#muteButton').textContent = 'Mute';
+        document.querySelector('#muteButton').textContent = 'mute';
       }
     },
     checkAnswer(event) {
@@ -156,10 +164,12 @@ export default {
         this.delayNode.delayTime.setValueAtTime(this.ansDelayTimeVal, this.context.currentTime);
         this.feedbackNode.gain.setValueAtTime(this.ansFeedbackGain, this.context.currentTime);
         this.dryGainNode.gain.setValueAtTime(1.0 - this.ansWetDryVal, this.context.currentTime);
-        this.wetGainNode.gain.setValueAtTime(this.ansDelayTimeVal, this.context.currentTime);
+        this.wetGainNode.gain.setValueAtTime(this.ansWetDryVal, this.context.currentTime);
       }
     },
     generateAnswer(event) {
+      this.showScore = false; // hide the old answer if creating new answer now
+      this.exerciseNum++;
       this.ansDelayTimeVal = generateAnswer(0,1.0);
       this.ansFeedbackGain = generateAnswer(0,0.6);
       this.ansWetDryVal = generateAnswer(0.0,1.0);
@@ -199,6 +209,9 @@ export default {
 
   <div class="title">
     <h1 class="black">Delay</h1>
+    <h2 class="black" id="difficultyid">difficulty: beginner</h2>
+    <h2 class="black" id="exerciseNumid">exercise number: {{this.exerciseNum}}</h2>
+    <br>
   </div>
     <div>
     <!-- TODO: on click, change playbutton to pause state -->
@@ -206,31 +219,36 @@ export default {
       <!-- <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
         <path d="M15 7.26795C16.3333 8.03775 16.3333 9.96225 15 10.7321L3 17.6603C1.66667 18.4301 1.01267e-06 17.4678 1.07997e-06 15.9282L1.68565e-06 2.0718C1.75295e-06 0.532196 1.66667 -0.430054 3 0.339746L15 7.26795Z"/>
       </svg> -->
-      <span>Play</span>
+      <span>play</span>
     </button>
-    <button @click="loopAudio" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
+    <button @click="loopAudio" id="loopButton" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
       <!-- TODO: svg for loop -->
       <!-- <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"></svg> -->
-      <span>Loop</span>
+      <span>no loop</span>
     </button>
     <button @click="muteAudio" id="muteButton" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
       <!-- TODO: svg for mute -->
       <!-- <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"></svg> -->
-      <span>Mute</span>
+      <span>mute</span>
     </button>
-    
     </div>
     <div>
       <br>
-    <audio ref="audioElement" controls>
+    <audio ref="audioElement" controls loop={{this.loopEnabled}}>
       <source src="../soundfiles/audio.mp3" type="audio/mpeg" />
       Your browser does not support the audio tag.
     </audio>
-    <button @click="switchAudioMode">
-    <div class="w-16 h-10 flex items-center bg-gray-300 rounded-full p-1 duration-300 ease-in-out" :class="{ 'bg-blue-400': !yoursActive}">
-      <div class="bg-white w-7 h-7 rounded-full shadow-md transform duration-300 ease-in-out" :class="{ 'translate-x-6': !yoursActive}"></div>
     </div>
-    </button>
+    <br>
+    <div>
+      <p class="items-center flex">Yours
+        <button @click="switchAudioMode">
+          <div class="w-16 h-10 flex items-center bg-gray-300 rounded-full p-1 duration-300 ease-in-out" :class="{ 'bg-blue-400': !yoursActive}">
+            <div class="bg-white w-7 h-7 rounded-full shadow-md transform duration-300 ease-in-out" :class="{ 'translate-x-6': !yoursActive}"></div>
+          </div>
+        </button>
+        &nbsp; Expected
+      </p>
     </div>
     <br>
     <div>
@@ -253,7 +271,7 @@ export default {
     <button @click="generateAnswer" type="button" class="space-x-[15px] text-white 
     bg-blue-600 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 
     font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 
-    dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900">new exercise</button> 
+    dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900">next exercise</button> 
       <br><br>
       <p v-if="showScore">delay duration: {{ this.delayScore }}</p>
       <p v-if="showScore">feedback gain: {{ this.fdbkScore }}</p>
