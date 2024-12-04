@@ -97,19 +97,12 @@ export default {
       }
       if (this.play) {
         this.$refs.audioElement.play();
-        document.querySelector('#playButton').textContent = 'pause';
-      } else {
+        } else {
         this.$refs.audioElement.pause();
-        document.querySelector('#playButton').textContent = 'play';
       }
     },
     loopAudio() {
       this.loopEnabled = !this.loopEnabled;
-      if (this.loopEnabled) {
-        document.querySelector('#loopButton').textContent = 'no loop';
-      } else {
-        document.querySelector('#loopButton').textContent = 'loop';
-      }
     },
     delayTimeUpdate(event) {
       if (this.yoursActive) {
@@ -137,11 +130,9 @@ export default {
       if (this.mute) {
         this.dryGainNode.gain.setValueAtTime(0, this.context.currentTime);
         this.passGainNode.gain.setValueAtTime(0, this.context.currentTime);
-        document.querySelector('#muteButton').textContent = 'unmute';
       } else {
         this.dryGainNode.gain.setValueAtTime(1.0, this.context.currentTime);
         this.passGainNode.gain.setValueAtTime(1.0, this.context.currentTime);
-        document.querySelector('#muteButton').textContent = 'mute';
       }
     },
     checkAnswer(event) {
@@ -214,22 +205,23 @@ export default {
     <br>
   </div>
     <div>
-    <!-- TODO: on click, change playbutton to pause state -->
-    <button @click="playPauseAudio" id="playButton" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
-      <!-- <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-        <path d="M15 7.26795C16.3333 8.03775 16.3333 9.96225 15 10.7321L3 17.6603C1.66667 18.4301 1.01267e-06 17.4678 1.07997e-06 15.9282L1.68565e-06 2.0718C1.75295e-06 0.532196 1.66667 -0.430054 3 0.339746L15 7.26795Z"/>
-      </svg> -->
-      <span>play</span>
+    <button v-if="play" @click="playPauseAudio" id="playButton" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
+      <img src="../svgs/pause.svg" class="icon">
     </button>
-    <button @click="loopAudio" id="loopButton" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
-      <!-- TODO: svg for loop -->
-      <!-- <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"></svg> -->
-      <span>no loop</span>
+    <button v-else @click="playPauseAudio" id="playButton" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
+      <img src="../svgs/play.svg" class="icon">
     </button>
-    <button @click="muteAudio" id="muteButton" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
-      <!-- TODO: svg for mute -->
-      <!-- <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"></svg> -->
-      <span>mute</span>
+    <button v-if="loopEnabled" @click="loopAudio" id="loopButton" class="bg-green-400 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center focus:bg-green-300">
+      <img src="../svgs/loopEnabled.svg" class="icon">
+    </button>
+    <button v-else @click="loopAudio" id="loopButton" class="bg-gray-300 hover:bg-green-100 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center focus:bg-gray-400">
+      <img src="../svgs/loop.svg" class="icon">
+    </button>
+    <button v-if="mute" @click="muteAudio" id="muteButton" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
+      <img src="../svgs/mute.svg" class="icon">
+    </button>
+    <button v-else @click="muteAudio" id="muteButton" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
+      <img src="../svgs/muteOff.svg" class="icon">
     </button>
     </div>
     <div>
@@ -285,6 +277,8 @@ export default {
 <style scoped>
 button {
   margin: 5px;
+  text-align: center;
+  /* width: 50px; */
 }
 .vert-space {
   margin-top: 100px;
@@ -360,10 +354,17 @@ h3 {
   box-shadow: 0 0 0 2px rgb(237, 236, 236);
 }
 
-/* @media (min-width: 1024px) {
-  .greetings h1,
-  .greetings h3 {
-    text-align: left;
-  }
-} */
+#loopButton {
+  max-height: 50px;
+  max-width: 60px;
+}
+#playButton {
+  max-height: 50px;
+  max-width: 60px;
+}
+#muteButton {
+  max-height: 50px;
+  max-width: 60px;
+}
+
 </style>

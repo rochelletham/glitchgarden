@@ -1,0 +1,5 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" 
+xmlns:xlink="http://www.w3.org/1999/xlink" 
+width="450" height="450" 
+viewBox="100 100 200 300">
+<defs/><g/><g transform="scale(1,1) scale(1,1)"><path fill="rgb(51,51,51)" stroke="rgb(0,0,0)" paint-order="fill stroke markers" d=" M 250 350 L 250 150 L 200 200 L 150 200 L 150 300 L 200 300 L 250 350" fill-opacity="1" stroke-opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="4"/><g transform="translate(-25,0)"><path fill="rgb(251,251,251)" stroke="rgb(251,251,251)" paint-order="fill stroke markers" d=" M 170 130 L 150 150 L 300 350 L 320 330 L 170 130" fill-opacity="1" stroke-opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="4"/><g transform="translate(8,0)"><path fill="rgb(51,51,51)" stroke="rgb(0,0,0)" paint-order="fill stroke markers" d=" M 160 140 L 150 150 L 300 350 L 310 340 L 160 140" fill-opacity="1" stroke-opacity="1" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="4"/></g></g></g></svg>
