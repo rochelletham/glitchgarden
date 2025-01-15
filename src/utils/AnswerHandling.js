@@ -20,19 +20,23 @@ const scoreText = (state) => {
     }
 }
 
-const checkAnswer = (userDelayDur, userFdbkGain, userWetDryVal,
-                    ansDelayDur, ansFdbkGain, ansWetDryVal
+// (userDelayDur, userFdbkGain, userWetDryVal,
+//     ansDelayDur, ansFdbkGain, ansWetDryVal
+//     ) 
+const checkAnswer = (userDelayDur, userFdbkGain, userWetDryVal, ansDelayDur, ansFdbkGain, ansWetDryVal
                     ) => {
     console.log("current answers: ", 
         "\ndelayTime Ans: ", ansDelayDur, 
         "\nfdbk gain Ans: ", ansFdbkGain,
         "\nwetdry Ans: ", ansWetDryVal);
-    
-    const delayScore = withinRange(userDelayDur, ansDelayDur, answers.paramCorrectRanges.delayDur.beginner);
-    const fdbkScore = withinRange(userFdbkGain, ansFdbkGain, answers.paramCorrectRanges.fdbkGain.beginner);
-    const wetDryScore = withinRange(userWetDryVal, ansWetDryVal, answers.paramCorrectRanges.wetDry.beginner)
+    // TODO: cater to the other answers
+    const delayScore = withinRange(userDelayDur, ansDelayDur, answers.flanger.paramCorrectRanges.delayDur.beginner);
+    const fdbkScore = withinRange(userFdbkGain, ansFdbkGain, answers.flanger.paramCorrectRanges.fdbkGain.beginner);
+    const wetDryScore = withinRange(userWetDryVal, ansWetDryVal, answers.flanger.paramCorrectRanges.wetDry.beginner)
     const overallScore = calcScore([delayScore, fdbkScore, wetDryScore]);
     return [scoreText(delayScore), scoreText(fdbkScore), scoreText(wetDryScore), overallScore];
+    // const overallScore = calcScore([fdbkScore, wetDryScore]);
+    // return [scoreText(fdbkScore), scoreText(wetDryScore), overallScore];
 };
 
 export default checkAnswer;
