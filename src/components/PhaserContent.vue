@@ -20,9 +20,9 @@ export default {
       numStages: 4,
       allPassFilters: [],
       rate: 5, 
-      depth: 1, 
-      resonance: 10,
-      feedbackVal: 0.0,
+      depth: 500, 
+      resonance: 6,
+      feedbackVal: .9,
       depthNode: null,
       feedbackNode: null,
       dryGainNode: null,
@@ -55,7 +55,7 @@ export default {
     this.lfo = new OscillatorNode(this.context);
     this.lfo.type = this.lfoType;
     this.depthNode = new GainNode(this.context);
-    this.depthNode.gain.setValueAtTime(1, this.context.currentTime);
+    this.depthNode.gain.setValueAtTime(this.depth, this.context.currentTime);
     //controls speed the notches and peaks move. det. how quickly modulation occurs. 
     this.lfo.frequency.value = this.rate;
     this.lfo.connect(this.depthNode);
@@ -65,15 +65,15 @@ export default {
     for (let i = 0; i < this.numStages; i++) {
       const filter = this.context.createBiquadFilter();
       filter.type = 'allpass';
-      filter.frequency.value = 1000;
+      filter.Q.value = this.resonance;
+      filter.frequency.value = 1000;   // center frequency = 1kHz
       this.allPassFilters.push(filter);
-      this.depthNode.connect(this.allPassFilters[i].Q);
+      this.depthNode.connect(this.allPassFilters[i].frequency);
     }
 
     this.feedbackNode = new GainNode(this.context);
     // feedback contributes to resonant and swirling character.
     // some of output from phaser fed back into input to enhance certain freq 
-    this.feedbackVal = 0.0;
     this.feedbackNode.gain.value = this.feedbackVal;
 
     // used for muting audio 
@@ -280,16 +280,13 @@ export default {
     <br>
     <div>
       <input type="range" @input="rateUpdate" v-model="this.rate" id="rate"
-      name="rate" min="0.0" max="60.0" step="0.1" class="efx-slider" >
+      name="rate" min="0.0" max="10.0" step="0.1" class="efx-slider" >
       <p>rate {{ this.rate }}</p>
       <input type="range" @input="depthUpdate" v-model="this.depth" id="depth"
-      name="rate" min="1.0" max="50" step="5" class="efx-slider" >
+      name="rate" min="100" max="500" step="10" class="efx-slider" >
       <p>depth {{ this.depth }}</p>
-      <input type="range" @input="resonanceUpdate" v-model="this.resonance" id="resonance"
-      name="resonance" min="1" max="500" step="5" class="efx-slider" >
-      <p>resonance {{ this.resonance }}</p>
       <input type="range" @input="feedbackUpdate" v-model="this.feedbackVal" id="feedback"
-      name="feedback" min="0.0" max="1.0" step="0.1" class="efx-slider" >
+      name="feedback" min="0.0" max="0.9" step="0.1" class="efx-slider" >
       <p>feedback {{ this.feedbackVal }}</p>
       <input type="range" @input="wetDryUpdate" v-model="this.wetDryVal" id="wetDryMix"
       name="wet/dry mix" min="0.0" max="1.0" step="0.1" class="efx-slider" >
