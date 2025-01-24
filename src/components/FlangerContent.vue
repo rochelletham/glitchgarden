@@ -262,31 +262,6 @@ export default {
     </div>
     <br>
     <div>
-      <RadioButton :lfoType="lfoType" @changeLfoType="changeLfoType"></RadioButton>
-      <!----------------- Radio Buttons -----------------> 
-      <!-- <div class="flex">
-        <div class="inline-flex overflow-hidden border border-gray-200 rounded-lg">
-            <label for="sine" class="cursor-pointer">
-                <input type="radio" name="lfotype" value="sine" v-model="lfoType" class="sr-only peer">
-                <span class="relative inline-flex items-center h-full py-2 pr-3 space-x-2 text-sm pl-7 peer-checked:bg-blue-200">
-                <span class="before:w-2 before:h-2 before:bg-blue-500 before:rounded-full before:absolute before:top-[14px] before:left-3">sine</span>
-                </span>
-            </label>
-            <label for="saw" class="cursor-pointer">
-                <input type="radio" name="lfotype" value="saw" v-model="lfoType" class="sr-only peer">
-                <span class="relative inline-flex items-center h-full py-2 pr-3 space-x-2 text-sm pl-7 peer-checked:bg-green-200">
-                <span class="before:w-2 before:h-2 before:bg-green-500 before:rounded-full before:absolute before:top-[14px] before:left-3">saw</span>
-                </span>
-            </label>
-            <label for="square" class="cursor-pointer">
-                <input type="radio" name="lfotype" value="square" v-model="lfoType" class="sr-only peer">
-                <span class="relative inline-flex items-center h-full py-2 pr-3 space-x-2 text-sm pl-7 peer-checked:bg-indigo-200">
-                <span class="before:w-2 before:h-2 before:bg-indigo-500 before:rounded-full before:absolute before:top-[14px] before:left-3">square</span>
-                </span>
-            </label>
-          </div>
-      </div> -->
-      <!----------------- Radio Buttons -----------------> 
       <input type="range" @input="delayTimeUpdate" v-model="this.delayTimeVal" id="delayDur"
       name="Delay Duration" min="0.0" max="0.01" step="0.001" value="0.0" class="efx-slider" >
       <p>delay duration: {{ (this.delayTimeVal)*1000 }} ms</p>
