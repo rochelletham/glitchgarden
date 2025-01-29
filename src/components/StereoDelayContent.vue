@@ -16,9 +16,6 @@ export default {
       playheadPos: 0,
       isPlaying: false,
       isloopEnabled: true,
-      lfoLeft: null,
-      lfoRt: null,
-      lfoType: "sine",
       feedfwdNodeLeft: null,
       feedfwdNodeRt: null,
       delayNodeLeft: null,
@@ -39,6 +36,8 @@ export default {
       outputGainNodeRt: null,
       outputGainLeft: 0.0,
       outputGainRt: 0.0,
+      splitterNode: null,
+      chanMergerNode: null,
       score: null,
       delayScore: null, 
       fdbkScore: null, 
@@ -79,59 +78,39 @@ export default {
     this.outputGainNodeLeft.gain.value = 0.0;
     this.outputGainNodeRt.gain.value = 0.0;
 
-    // used for sending to left vs right channel of destination node
-    var leftPanNode = new StereoPannerNode(this.context);
-    leftPanNode.pan.value = -1;
+    const splitterOpt = {
+      numberOfOutputs: 4,
+    };
+    const mergerOpt = {
+      numberOfInputs: 4,
+    };
 
-    var rtPanNode = new StereoPannerNode(this.context);
-    rtPanNode.pan.value = 1;
-
+    // split input signal into left and right channel
+    this.splitterNode = new ChannelSplitterNode(this.context, splitterOpt);
+    // eventually used to merge the left dry + left wet. right dry + right wet
+    this.chanMergerNode = new ChannelMergerNode(this.context, mergerOpt);
+    
     //***** DONT TOUCH -- FOR DRY AUDIO *****// 
+    this.bufferSource.connect(this.splitterNode);
     this.dryGainNodeLeft.gain.value = 1.0;    // default to dry 100%
-    this.bufferSource.connect(this.dryGainNodeLeft);
-    this.dryGainNodeLeft.connect(leftPanNode);
+    this.splitterNode.connect(this.dryGainNodeLeft, 0);
+    this.dryGainNodeLeft.connect(this.chanMergerNode, 0, 0);
     
     this.dryGainNodeRt.gain.value = 1.0;    // default to dry 100%
-    this.bufferSource.connect(this.dryGainNodeRt);
-    this.dryGainNodeRt.connect(rtPanNode);
+    this.splitterNode.connect(this.dryGainNodeRt, 1);
+    this.dryGainNodeRt.connect(this.chanMergerNode, 0, 1);
     //***** DONT TOUCH -- FOR DRY AUDIO *****// 
-
-    this.bufferSource.connect(this.delayNodeLeft).connect(this.feedbackNodeLeft).connect(this.delayNodeLeft);
-    this.delayNodeLeft.connect(this.wetGainNodeLeft).connect(this.outputGainNodeLeft).connect(leftPanNode);
-
-    this.bufferSource.connect(this.delayNodeRt).connect(this.feedbackNodeRt).connect(this.delayNodeRt);
-    this.delayNodeRt.connect(this.wetGainNodeRt).connect(this.outputGainNodeRt).connect(rtPanNode);
-
-    leftPanNode.connect(this.context.destination);
-    rtPanNode.connect(this.context.destination);
     
-    //**** LFO that will be fed into delay node  ****//
-    // set up LFO. should osc between 0 and 1
-    this.lfoLeft = new OscillatorNode(this.context);
-    this.lfoLeft.type = this.lfoType;
-    const depthLeft = new GainNode(this.context);
-    this.lfoLeft.connect(depthLeft).connect(this.delayNodeLeft.delayTime);
-    this.lfoLeft.start();
+    this.splitterNode.connect(this.delayNodeLeft, 0).connect(this.feedbackNodeLeft).connect(this.delayNodeLeft);
+    this.delayNodeLeft.connect(this.wetGainNodeLeft).connect(this.outputGainNodeLeft);
 
-    this.feedbackGainLeft = 0.0;
-    this.lfoLeft.frequency.value = 0.1;
-    this.delayTimeValLeft = 0.005;
-    this.delayNodeLeft.delayTime.value = this.delayTimeValLeft;
-    this.feedbackNodeLeft.gain.value = this.feedbackGainLeft;
-    depthLeft.gain.value = 0.004;
+    this.splitterNode.connect(this.delayNodeRt, 1).connect(this.feedbackNodeRt).connect(this.delayNodeRt);
+    this.delayNodeRt.connect(this.wetGainNodeRt).connect(this.outputGainNodeRt);
 
-    this.lfoRt = new OscillatorNode(this.context);
-    this.lfoRt.type = this.lfoType;
-    const depthRt = new GainNode(this.context);
-    this.lfoRt.connect(depthRt).connect(this.delayNodeRt.delayTime);
-    this.lfoRt.start();
-
-    this.feedbackGainRt = 0.0;
-    this.lfoRt.frequency.value = 0.1;
-    this.delayTimeValRt = 0.005;
-    this.delayNodeRt.delayTime.value = this.delayTimeValRt;
-    this.feedbackNodeRt.gain.value = this.feedbackGainRt;
-    depthRt.gain.value = 0.004;
+    this.outputGainNodeLeft.connect(this.chanMergerNode, 0, 0);
+    this.outputGainNodeRt.connect(this.chanMergerNode, 0, 1);
+    this.chanMergerNode.connect(this.context.destination);
+    
     
     // now randomly generating the answer 
     this.ansDelayTimeValLeft = generateAnswer(0,1.0);
@@ -319,11 +298,6 @@ export default {
             console.log("right output gain: ", this.outputGainNodeRt.gain.value);
         }
     },
-    changeLfoType(newlfoType) {
-      this.lfoType = newlfoType;  
-      console.log(this.lfoType);
-      console.log(this.lfoLeft.type);
-    },
     generateAnswer(event) {
       this.showScore = false; // hide the old answer if creating new answer now
       this.exerciseNum++;
@@ -390,7 +364,7 @@ export default {
       <p>left delay duration: {{ (this.delayTimeValLeft)*1000 }} ms</p>
       
       <input type="range" @input="feedbackGainUpdateLeft" v-model="this.feedbackGainLeft" id="fdbkGainLeft"
-      name="Left Feedback Gain" min="0" max="1.0" step=".1" value="0.0" class="efx-slider" >
+      name="Left Feedback Gain" min="0" max=".9" step=".1" value="0.0" class="efx-slider" >
       <p>left feedback gain: {{ (this.feedbackGainLeft) }}</p>
       
       <input type="range" @input="wetDryUpdateLeft" v-model="this.wetDryValLeft" id="wetDryMixLeft"
@@ -406,7 +380,7 @@ export default {
       <p>right delay duration: {{ (this.delayTimeValRt)*1000 }} ms</p>
       
       <input type="range" @input="feedbackGainUpdateRt" v-model="this.feedbackGainRt" id="fdbkGainRt"
-      name="Right Feedback Gain" min="0" max="1.0" step=".1" value="0.0" class="efx-slider" >
+      name="Right Feedback Gain" min="0" max=".9" step=".1" value="0.0" class="efx-slider" >
       <p>right feedback gain: {{ (this.feedbackGainRt) }}</p>
       
       <input type="range" @input="wetDryUpdateRt" v-model="this.wetDryValRt" id="wetDryMixRt"
