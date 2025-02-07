@@ -1,10 +1,11 @@
 {
-  "name": "delay-proj",
+  "name": "glitchgarden",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build": "vue-cli-service build",
+    "deploy": "sh deploy.sh"
   },
   "dependencies": {
     "autoprefixer": "^10",

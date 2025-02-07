@@ -15,3 +15,6 @@ packages/template-compiler/browser.js
 dist
 temp
 types/v3-generated.d.ts
+soundfiles/*
+public/soundfiles
+img/*
