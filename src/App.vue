@@ -1,8 +1,8 @@
 <template>
   <NavigatorBar/>
-  <PhaserContent/>
+  <!-- <PhaserContent/> -->
   <!-- <StereoDelayContent/> -->
-  <!-- <FlangerContent/> -->
+  <FlangerContent/>
   <!-- <ChorusContent/> -->
   <!-- <DoublingContent/>  -->
   <!-- <EchoContent/>  -->
