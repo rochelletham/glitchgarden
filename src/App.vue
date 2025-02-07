@@ -3,9 +3,9 @@
   <!-- <PhaserContent/> -->
   <!-- <StereoDelayContent/> -->
   <FlangerContent/>
-  <!-- <ChorusContent/> -->
-  <!-- <DoublingContent/>  -->
-  <!-- <EchoContent/>  -->
+  <ChorusContent/>
+  <DoublingContent/> 
+  <EchoContent/> 
   <!-- <VibratoContent/> -->
   <!-- <WhiteChorusContent/> -->
 </template>
