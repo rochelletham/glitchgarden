@@ -1,0 +1,45 @@
+{
+    "title": "Flanger",
+    "difficulty": "easy",
+    "buttons": [
+        "playButton",
+        "loopButton",
+        "muteButton"
+    ],
+    "sliders": {
+        "delayDuration": {
+            "default": 5,
+            "range": [0,10],
+            "increment": 1, 
+            "unit": "ms",
+            "answer range": {
+                "easy": [0,10],
+                "medium": [0,10],
+                "hard": [0,10]
+            }
+        },
+        "feedbackGain": {
+            "default": 0.7,
+            "range": [0,1],
+            "increment": 0.1,
+            "unit": "",
+            "answer range": {
+                "easy": [0,10],
+                "medium": [0,10],
+                "hard": [0,10]
+            }
+        },
+        "dry/wet mix": {
+            "default": 50,
+            "range": [0,100],
+            "increment": 10,
+            "unit": "%",
+            "answer range": {
+                "easy": [0,10],
+                "medium": [0,10],
+                "hard": [0,10]
+            }
+        }
+    }
+
+}
