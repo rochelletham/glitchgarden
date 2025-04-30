@@ -1,0 +1,82 @@
+.slider-container {
+    background-color: rgba(62, 66, 69, 1);
+    border-radius: 3px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 170px;
+    width: 36px;
+    padding-top: 10px;
+    gap: 5px; 
+}
+/* 
+.slider-label {
+    background-color: red;
+    font-size: 14px;
+    color: red;
+    text-align: center;
+    margin-bottom: 5px; /* Space between label and slider 
+}  */
+
+/* for the tick marks on slider */
+.slider::before {
+    content: ''; 
+    position: absolute;
+    left: -50%; /* Extend tick marks to the left */
+    top: 0; 
+    background: repeating-linear-gradient(
+        to top, 
+        transparent 5px, 
+        transparent 15px, 
+        rgba(103, 105, 107, 1) 6px, 
+        rgba(103, 105, 107, 1) 16px 
+    ); 
+    z-index: -1; 
+    pointer-events: none;
+    width: 24px;
+    height: 100%;
+}
+
+.slider {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    height: 200px;
+    width: 12px; 
+    cursor: pointer;
+    position: relative;
+    align-items: center;
+    background: rgba(38, 42, 45, 1);
+    outline: none;
+    opacity: 0.85;
+    writing-mode: vertical-lr; 
+}
+
+/* .slider:hover {
+    box-shadow: 0 0 0 1px rgb(237, 236, 236);
+} */
+
+/* the knob of the slider */
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none; 
+    appearance: none;
+    width: 20px; /* because track width is 12px*/
+    height: 10px;
+    border: 1px solid rgb(255, 255, 255);
+    border-radius: 3px;
+    cursor: pointer; /* Pointer on hover */
+    background: linear-gradient(
+        to top,
+        transparent 38%,
+        rgba(132, 137, 138, 1) 38%,
+        rgba(132, 137, 138, 1) 55%,
+        transparent 56%
+    );
+    background-color: rgb(255, 255, 255);
+}
+
+.slider-value {
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+}
