@@ -10,6 +10,7 @@
     height: 170px;
     width: 36px;
     padding-top: 10px;
+    padding-bottom:5px;
     gap: 5px; 
 }
 
@@ -35,6 +36,10 @@
 .vert-slider {
     -webkit-appearance: none;
     -moz-appearance: none;
+
+    writing-mode: vertical-lr;
+    direction: rtl;
+
     height: 200px;
     width: 12px; 
     cursor: pointer;
@@ -43,8 +48,6 @@
     background: rgba(38, 42, 45, 1);
     outline: none;
     opacity: 0.85;
-    /* writing-mode: vertical-lr;  */
-    writing-mode: vertical-rl;
 }
 
 /* .slider:hover {
@@ -70,19 +73,35 @@
     background-color: rgb(255, 255, 255);
 }
 
-/* .vert-slider-value {
-    font-size: 16px;
-    font-weight: bold;
-    color: white;
-    text-align: center;
-} */
-
 .vert-slider-value {
-    width: 50px; /* Set a fixed width for the input box */
-    text-align: center; /* Center the text inside the input box */
-    font-size: 16px;
-    font-weight: bold;
-    color: black;
+    pointer-events: auto; 
+    user-select: auto;
+    /* padding: 5px; */
+    width: 60%;
+    /* width: 50px; Set a fixed width for the value display */
+    text-align: center; /* Center the text inside the input */
+    font-size: 12px;
+    /* color: rgba(198, 198, 198, 1); */
+    color:rgba(103, 105, 107, 1);
+    /* background-color: rgba(132, 136, 138, 1);
+    border: 1px solid rgba(132, 136, 138, 1); */
+    background-color: rgba(198, 198, 198, 1);
+    border: 1px solid rgba(198, 198, 198, 1);
+    border-radius: 5px;
+    #textBox{ z-index:1000; }
+    
+}
+
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  /* margin: 0; */
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }
 
 /***************************************************************************/
@@ -177,7 +196,7 @@
     font-weight: bold;
     color: white;
 }
-
+/* 
 .slider-container {
     background-color: lightblue;
     display: flex; 
@@ -212,4 +231,4 @@
     color: black;
     text-align: center;
     line-height: 1;
-}
+} */
