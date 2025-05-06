@@ -1,0 +1,26 @@
+.slider {
+    position: relative;
+    height: 200px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .slider input[type=range] {
+    writing-mode: bt-lr;
+    appearance: slider-vertical;
+    height: 100%;
+    width: 100%;
+    z-index: 2;
+    position: relative;
+  }
+  
+  .slider .tick {
+    position: absolute;
+    width: 50%;
+    height: 1px;
+    background: black;
+    z-index: 1;
+  }
+  

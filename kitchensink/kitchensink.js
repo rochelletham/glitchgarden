@@ -3,7 +3,7 @@ const vertsliderValue = document.querySelector('#vert-slider-value');
 
 vertslider.addEventListener('input', function () {
     var val = ((this.value - this.min) / (this.max - this.min)) * 100; // Calculate percentage)
-    const percentage = Math.round(100 - (val / this.max) * 100); // Reverse the percentage calculation
+    const percentage = Math.round(100 - (val / this.max) * 100); 
     console.log("percentage: ", percentage);
     vertslider.style.setProperty('--vert-slider-value', `${percentage}%`);
     vertsliderValue.textContent = percentage; // updates the displayed value for slider

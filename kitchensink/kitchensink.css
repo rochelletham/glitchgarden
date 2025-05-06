@@ -12,14 +12,6 @@
     padding-top: 10px;
     gap: 5px; 
 }
-/* 
-.slider-label {
-    background-color: red;
-    font-size: 14px;
-    color: red;
-    text-align: center;
-    margin-bottom: 5px; /* Space between label and slider 
-}  */
 
 /* for the tick marks on slider */
 .vert-slider::before {
@@ -51,7 +43,8 @@
     background: rgba(38, 42, 45, 1);
     outline: none;
     opacity: 0.85;
-    writing-mode: vertical-lr; 
+    /* writing-mode: vertical-lr;  */
+    writing-mode: vertical-rl;
 }
 
 /* .slider:hover {
@@ -77,11 +70,19 @@
     background-color: rgb(255, 255, 255);
 }
 
-.vert-slider-value {
+/* .vert-slider-value {
     font-size: 16px;
     font-weight: bold;
     color: white;
     text-align: center;
+} */
+
+.vert-slider-value {
+    width: 50px; /* Set a fixed width for the input box */
+    text-align: center; /* Center the text inside the input box */
+    font-size: 16px;
+    font-weight: bold;
+    color: black;
 }
 
 /***************************************************************************/
@@ -175,6 +176,40 @@
     font-size: 16px;
     font-weight: bold;
     color: white;
-    text-align: right;
 }
 
+.slider-container {
+    background-color: lightblue;
+    display: flex; 
+    flex-direction: row; 
+    align-items: center; 
+    gap: 10px;
+    width: 50%; 
+}
+
+.slider-text-container {
+    background-color: lightcyan; 
+    display: flex; 
+    flex-direction: row; 
+    align-items: center; 
+    gap: 5px; 
+    width: fit-content;
+}
+
+.slider-value {
+    background-color: pink; 
+    font-size: 16px;
+    font-weight: bold;
+    color: black;
+    text-align: center;
+    line-height: 1; 
+}
+
+.slider-label {
+    background-color: green; 
+    font-size: 16px;
+    font-weight: bold;
+    color: black;
+    text-align: center;
+    line-height: 1;
+}
