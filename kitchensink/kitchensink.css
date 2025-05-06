@@ -96,10 +96,11 @@
     align-items: center;
     width: 242.5px;
     height: 36px;
-    padding-top: 10px;
     gap: 5px; 
     position: relative;
-    padding: 0;
+    padding: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 /* 
 .slider-label {
