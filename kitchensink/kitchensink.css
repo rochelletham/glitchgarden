@@ -40,6 +40,7 @@
     writing-mode: vertical-lr;
     direction: rtl;
 
+    border-radius: 3px;
     height: 200px;
     width: 12px; 
     cursor: pointer;
@@ -50,8 +51,8 @@
     opacity: 0.85;
 }
 
-/* .slider:hover {
-    box-shadow: 0 0 0 1px rgb(237, 236, 236);
+/* .vert-slider:hover {
+    box-shadow: 0 0 0 0.5px rgb(10, 255, 136);
 } */
 
 /* the knob of the slider */
@@ -78,18 +79,23 @@
     user-select: auto;
     /* padding: 5px; */
     width: 60%;
-    /* width: 50px; Set a fixed width for the value display */
-    text-align: center; /* Center the text inside the input */
+    text-align: center;
     font-size: 12px;
-    /* color: rgba(198, 198, 198, 1); */
-    color:rgba(103, 105, 107, 1);
-    /* background-color: rgba(132, 136, 138, 1);
-    border: 1px solid rgba(132, 136, 138, 1); */
-    background-color: rgba(198, 198, 198, 1);
+    color: rgba(132, 137, 138, 1); 
+    /* border: 1px solid rgba(132, 136, 138, 1); */
+    /* background-color: rgba(198, 198, 198, 1); */
+    background-color: rgb(255, 255, 255);
     border: 1px solid rgba(198, 198, 198, 1);
     border-radius: 5px;
     #textBox{ z-index:1000; }
-    
+}
+
+.vert-slider-value:focus {
+    outline: 1px solid black; 
+    /* background-color: rgba(132, 136, 138, 1); */
+    background-color: rgba(132, 137, 138, 1);
+    box-shadow: none; 
+    color: white;
 }
 
 
@@ -164,10 +170,11 @@ input[type=number] {
     opacity: 0.85;
     writing-mode: horizontal-tb;
     margin: 0;
+    border-radius: 3px;
 }
 
-/* .slider:hover {
-    box-shadow: 0 0 0 1px rgb(237, 236, 236);
+/* .hori-slider:hover {
+    box-shadow: 0 0 0 0.5px rgb(237, 236, 236);
 } */
 
 /* the knob of the slider */
