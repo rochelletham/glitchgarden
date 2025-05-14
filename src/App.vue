@@ -1,11 +1,12 @@
 <template>
   <NavigatorBar/>
+  <component :is="selectedComponent" />
   <!-- <PhaserContent/> -->
   <!-- <StereoDelayContent/> -->
-  <FlangerContent/>
-  <ChorusContent/>
+  <!-- <FlangerContent/> -->
+  <!-- <ChorusContent/>
   <DoublingContent/> 
-  <EchoContent/> 
+  <EchoContent/>  -->
   <!-- <VibratoContent/> -->
   <!-- <WhiteChorusContent/> -->
 </template>
@@ -20,6 +21,8 @@ import FlangerContent from './components/FlangerContent.vue';
 import ChorusContent from './components/ChorusContent.vue';
 import DoublingContent from './components/DoublingContent.vue';
 import EchoContent from './components/EchoContent.vue';
+import About from './components/About.vue';
+import router from './router';
 // import VibratoContent from './components/VibratoContent.vue';
 // import WhiteChorusContent from './components/WhiteChorusContent.vue';
 // import StereoDelayContent from './components/StereoDelay.vue';
@@ -34,10 +37,22 @@ export default {
     ChorusContent,
     DoublingContent,
     EchoContent,
+    About,
     // VibratoContent,
     // WhiteChorusContent,
     // StereoDelayContent,
     PhaserContent
+  },
+  props: {
+    component: {
+      type: String,
+      default: 'FlangerContent' // Default component
+    }
+  },
+  computed: {
+    selectedComponent() {
+      return this.$route.query.component || 'PhaserContent'; // Default component
+    }
   }
 }
 </script>
@@ -49,6 +64,10 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  /* background-color: var(--serum-dark-bg);
+  color: --serum-highlight-blue; */
+  
+
   /* margin-top: 60px; */
 }
 </style>
