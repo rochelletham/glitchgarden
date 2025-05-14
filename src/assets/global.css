@@ -1,0 +1,75 @@
+
+:root {
+  /* Text Colors */
+  --t-color: rgba(236, 246, 242, 1);
+
+  /* Kiwi Colors */
+  --dark-green: rgba(138, 200, 134, 1);
+  --light-green: rgba(148, 212, 122, 1);
+  --orange: rgba(246, 177, 81, 1);
+  --light-blue: rgba(123, 161, 233, 1);
+  --purple: rgba(123, 161, 233, 1);
+
+  /* Background Colors */
+  --primary-bk: rgb(37, 37, 37);
+  --secondary-bk: rgb(52, 52, 52);
+  --tertiary-bk: rgb(56, 59, 65);
+
+
+  /* Inputs & UI */
+  --input-bg-color: #2c2f31;
+  --input-border-color: #3c3f41;
+  --button-text-color: #0a0a0a;
+}
+
+html {
+  min-height: 100vh;
+  background-color: var(--primary-bk);
+}
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  background-color: var(--primary-bk);
+  /* background-color: rgba(26, 26, 26, 1); */
+  color: var(--t-color);
+}
+/* General Styles */
+body {
+  color: var(--t-color);
+  font-family: 'Segoe UI', 'Roboto', sans-serif;
+  margin: 0;
+}
+
+
+/* Links */
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--primary-color-hover);
+}
+
+/* Buttons */
+button {
+  /* background-color: var(--primary-color); */
+  color: var(--button-text-color);
+  border: none;
+  padding: 0.5rem 1rem;
+  /* border-radius: 4px; */
+  cursor: pointer;
+  transition: var(--primary-background) 0.2s ease;
+}
+
+/* Inputs */
+input, textarea {
+  background-color: var(--input-bg-color);
+  color: var(--text-color);
+  border: 1px solid var(--input-border-color);
+  border-radius: 4px;
+  padding: 0.5rem;
+  width: 100%;
+}
