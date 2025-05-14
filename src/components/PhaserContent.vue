@@ -244,9 +244,9 @@ export default {
 <template>
   
   <div class="title">
-    <h1 class="black">Phaser</h1>
-    <h2 class="black" id="difficultyid">difficulty: beginner</h2>
-    <h2 class="black" id="exerciseNumid">exercise number: {{this.exerciseNum}}</h2>
+    <h1 >Phaser</h1>
+    <h2 id="difficultyid">difficulty: beginner</h2>
+    <h2  id="exerciseNumid">exercise number: {{this.exerciseNum}}</h2>
     <br>
   </div>
     <div>
@@ -256,7 +256,7 @@ export default {
     <audioButton v-else @click="playAudio" id="playButton" class="cursor-pointer bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
       <img src="../svgs/play.svg" class="icon">
     </audioButton>
-    <audioButton @click="loopAudio" id="loopButton" class="cursor-pointer bg-gray-300 hover:bg-green-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center ease-in-out" :class="{ 'bg-green-300': isloopEnabled}">
+    <audioButton @click="loopAudio" id="loopButton" class="cursor-pointer bg-gray-300 hover:bg-primary-color-hover text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center ease-in-out" :class="{ 'bg-primary-color': isloopEnabled}">
       <img src="../svgs/loopEnabled.svg" class="icon"> 
     </audioButton>
     <audioButton v-if="mute" @click="muteAudio" id="muteButton" class="cursor-pointer bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
@@ -270,11 +270,10 @@ export default {
     <div>
       <p class="items-center flex">Yours
         <button @click="switchAudioMode">
-          <div class="w-16 h-10 flex items-center bg-gray-300 rounded-full p-1 duration-300 ease-in-out" :class="{ 'bg-green-300': !yoursActive}">
+          <div class="w-16 h-10 flex items-center bg-gray-300 rounded-full p-1 duration-300 ease-in-out" :class="{ 'bg-primary-color': !yoursActive}">
             <div class="bg-white w-7 h-7 rounded-full shadow-md transform duration-300 ease-in-out" :class="{ 'translate-x-6': !yoursActive}"></div>
           </div>
-        </button>
-        &nbsp; Expected
+        </button>Expected
       </p>
     </div>
     <br>
@@ -312,7 +311,6 @@ export default {
 </template>
 
 <style scoped>
-
 button {
   margin: 5px;
   text-align: center;

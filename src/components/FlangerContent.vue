@@ -91,6 +91,26 @@ export default {
                 "\nfdbk gain Ans: ", this.ansFeedbackGain,
                 "\nwetdry Ans: ", this.ansWetDryVal);
 
+    const horiSlider = document.querySelector('.hori-slider');
+    const horiSliderValue = document.querySelector('.hori-slider-value');
+
+    horiSlider.addEventListener('input', function () {
+        // Synchronize input number with slider value
+        horiSliderValue.value = horiSlider.value; 
+        this.style.background = `linear-gradient(to right, rgba(7, 235, 123, 1) ${horiSlider.value}%,
+        rgba(38, 42, 45, 1) ${horiSlider.value}%)`;
+    });
+
+    horiSlider.addEventListener('input', function () {
+      let value = parseInt(horiSliderValue.value, 10);
+        if (value >= 0 && value <= 100) {
+          horiSlider.value = value;
+          horiSliderValue.value = horiSlider.value;
+          horiSlider.style.background = `linear-gradient(to right, rgba(7, 235, 123, 1) ${horiSlider.value}%,
+        rgba(38, 42, 45, 1) ${horiSlider.value}%)`;
+        }
+    });
+
   },
   methods: {
     startAudioContext() {
@@ -227,9 +247,9 @@ export default {
 <template>
   
   <div class="title">
-    <h1 class="black">Flanger</h1>
-    <h2 class="black" id="difficultyid">difficulty: beginner</h2>
-    <h2 class="black" id="exerciseNumid">exercise number: {{this.exerciseNum}}</h2>
+    <h1 >Flanger</h1>
+    <h2  id="difficultyid">difficulty: beginner</h2>
+    <h2  id="exerciseNumid">exercise number: {{this.exerciseNum}}</h2>
     <br>
   </div>
     <div>
@@ -263,15 +283,16 @@ export default {
     <br>
     <div>
       <input type="range" @input="delayTimeUpdate" v-model="this.delayTimeVal" id="delayDur"
-      name="Delay Duration" min="0.0" max="0.01" step="0.001" value="0.0" class="efx-slider" >
+      name="Delay Duration" min="0.0" max="0.01" step="0.001" value="0.0" class="hori-slider" >
       <p>delay duration: {{ (this.delayTimeVal)*1000 }} ms</p>
+      <input id="hori-slider-value" type="number" class="hori-slider-value" min="0" max="100" value="0">
       
       <input type="range" @input="feedbackGainUpdate" v-model="this.feedbackGain" id="fdbkGain"
-      name="Feedback Gain" min="0" max="1.0" step=".1" value="0.0" class="efx-slider" >
+      name="Feedback Gain" min="0" max="1.0" step=".1" value="0.0" class="hori-slider" >
       <p>feedback gain: {{ (this.feedbackGain) }}</p>
       
       <input type="range" @input="wetDryUpdate" v-model="this.wetDryVal" id="wetDryMix"
-      name="Wet/Dry Mix" min="0.0" max="1.0" step="0.1" class="efx-slider" >
+      name="Wet/Dry Mix" min="0.0" max="1.0" step="0.1" class="hori-slider" >
       <p>dry/wet mix {{ (this.wetDryVal)*100 }}%</p>
       <br>
       <button @click="checkAnswer" type="button" class="text-white 
@@ -389,4 +410,111 @@ audio::-webkit-media-controls {
         display: none;
     }
 
+/***************************************************************************/
+/* Horizontal Slider */
+/***************************************************************************/
+.hori-slider-container {
+    /* background-color: red; */
+    background-color: rgba(62, 66, 69, 1);
+    border-radius: 3px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 242.5px;
+    height: 36px;
+    gap: 5px; 
+    position: relative;
+    padding: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+/* 
+.slider-label {
+    background-color: red;
+    font-size: 14px;
+    color: red;
+    text-align: center;
+    margin-bottom: 5px; /* Space between label and slider 
+}  */
+
+/* for the tick marks on slider */
+.hori-slider::before {
+    content: ''; 
+    position: absolute;
+    /* left: -50%; Extend tick marks to the left */
+    /* top: -50%;  */
+    background: repeating-linear-gradient(
+        to right, 
+        transparent 5px, 
+        transparent 15px, 
+        rgba(103, 105, 107, 1) 6px, 
+        rgba(103, 105, 107, 1) 16px 
+    ); 
+    z-index: -1; 
+    pointer-events: none;
+    height: 24px;
+    width: 100%;
+}
+
+.hori-slider {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    /* width: 200px; */
+    width: 25%;
+    height: 12px; 
+    cursor: pointer;
+    position: relative;
+    align-items: center;
+    background: rgba(38, 42, 45, 1);
+    outline: none;
+    opacity: 0.85;
+    writing-mode: horizontal-tb;
+    margin: 0;
+    border-radius: 3px;
+}
+
+
+/* the knob of the slider */
+.hori-slider::-webkit-slider-thumb {
+    -webkit-appearance: none; 
+    appearance: none;
+    height: 20px; 
+    width: 10px;    /* because track width is 12px*/
+    border: 1px solid rgb(255, 255, 255);
+    border-radius: 3px;
+    cursor: pointer; /* Pointer on hover */
+    background: linear-gradient(  /* for creating a line on the knob */
+        to right,
+        transparent 38%,
+        rgba(132, 137, 138, 1) 38%,
+        rgba(132, 137, 138, 1) 55%,
+        transparent 56%
+    );
+    background-color: rgb(255, 255, 255);
+}
+
+.hori-slider-value {
+    pointer-events: auto; 
+    user-select: auto;
+    text-align: center;
+    line-height: normal;
+    padding: 5px;
+    width: 10%;
+    height: 25%;
+    font-size: 12px;
+    color: rgba(132, 137, 138, 1); 
+    /* border: 1px solid rgba(132, 136, 138, 1); */
+    /* background-color: rgba(198, 198, 198, 1); */
+    background-color: rgb(255, 255, 255);
+    border: 1px solid rgba(198, 198, 198, 1);
+    border-radius: 5px;
+    #textBox{ z-index:1000; }
+}
+
+.hori-slider-value:focus {
+    outline: 1px solid black; 
+    background-color: rgba(132, 137, 138, 1);
+    box-shadow: none; 
+    color: white;
+}
 </style>
