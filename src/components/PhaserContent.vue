@@ -256,7 +256,7 @@ export default {
     <audioButton v-else @click="playAudio" id="playButton" class="cursor-pointer bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
       <img src="../svgs/play.svg" class="icon">
     </audioButton>
-    <audioButton @click="loopAudio" id="loopButton" class="cursor-pointer bg-gray-300 hover:bg-primary-color-hover text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center ease-in-out" :class="{ 'bg-primary-color': isloopEnabled}">
+    <audioButton @click="loopAudio" id="loopButton" class="cursor-pointer bg-gray-300 hover:bg-primary-color-hover text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center ease-in-out" :class="{ 'bg-light-green': isloopEnabled}">
       <img src="../svgs/loopEnabled.svg" class="icon"> 
     </audioButton>
     <audioButton v-if="mute" @click="muteAudio" id="muteButton" class="cursor-pointer bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
@@ -270,7 +270,7 @@ export default {
     <div>
       <p class="items-center flex">Yours
         <button @click="switchAudioMode">
-          <div class="w-16 h-10 flex items-center bg-gray-300 rounded-full p-1 duration-300 ease-in-out" :class="{ 'bg-primary-color': !yoursActive}">
+          <div class="w-16 h-10 flex items-center bg-gray-300 rounded-full p-1 duration-300 ease-in-out" :class="{ 'bg-light-green': !yoursActive}">
             <div class="bg-white w-7 h-7 rounded-full shadow-md transform duration-300 ease-in-out" :class="{ 'translate-x-6': !yoursActive}"></div>
           </div>
         </button>Expected
@@ -283,7 +283,7 @@ export default {
       <p>rate {{ this.rate }}</p>
       <input type="range" @input="depthUpdate" v-model="this.depth" id="depth"
       name="rate" min="100" max="500" step="10" class="efx-slider" >
-      <p>depth {{ this.depth }}</p>
+      <p>depth {{ this.depth }} Hz</p>
       <input type="range" @input="feedbackUpdate" v-model="this.feedbackVal" id="feedback"
       name="feedback" min="0.0" max="0.9" step="0.1" class="efx-slider" >
       <p>feedback {{ this.feedbackVal }}</p>
@@ -292,14 +292,14 @@ export default {
       <p>dry/wet mix {{ (this.wetDryVal)*100 }}%</p>
     
       <br>
-      <button @click="checkAnswer" type="button" class="text-white 
-    bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 
+      <button @click="checkAnswer" type="button" class="text-t-color 
+    bg-dark-green hover:bg-light-green focus:outline-none focus:ring-4 focus:ring-lighter-green
     font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 
-    dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-900">check answer</button>  
-    <button @click="generateAnswer" type="button" class="space-x-[15px] text-white 
-    bg-blue-600 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 
+    dark:bg-green-600 dark:hover:bg-dark-green dark:focus:ring-green-900">check answer</button>  
+    <button @click="generateAnswer" type="button" class="space-x-[15px] text-t-color 
+    bg-blue-800 hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-600 
     font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 
-    dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900">next exercise</button> 
+    dark:bg-blue-800 dark:hover:bg-blue-700 dark:focus:ring-blue-600 ">next exercise</button> 
       <br><br>
       <p v-if="showScore">delay duration: {{ this.delayScore }}</p>
       <p v-if="showScore">feedback gain: {{ this.fdbkScore }}</p>

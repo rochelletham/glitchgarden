@@ -25,7 +25,7 @@ import About from './components/About.vue';
 import router from './router';
 // import VibratoContent from './components/VibratoContent.vue';
 // import WhiteChorusContent from './components/WhiteChorusContent.vue';
-// import StereoDelayContent from './components/StereoDelay.vue';
+import StereoDelayContent from './components/StereoDelayContent.vue';
 
 
 
@@ -40,7 +40,7 @@ export default {
     About,
     // VibratoContent,
     // WhiteChorusContent,
-    // StereoDelayContent,
+    StereoDelayContent,
     PhaserContent
   },
   props: {
@@ -51,23 +51,12 @@ export default {
   },
   computed: {
     selectedComponent() {
-      return this.$route.query.component || 'PhaserContent'; // Default component
+      return this.$route.query.component || 'EchoContent'; // Default component
     }
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  /* background-color: var(--serum-dark-bg);
-  color: --serum-highlight-blue; */
-  
 
-  /* margin-top: 60px; */
-}
 </style>

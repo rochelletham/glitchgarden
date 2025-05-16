@@ -228,10 +228,10 @@ export default {
       name="Wet/Dry Mix" min="0" max="1" step="0.1" class="efx-slider" >
       <p>dry/wet mix {{ (this.wetDryVal) }}</p>
       <br>
-      <button @click="checkAnswer" type="button" class="text-white 
-    bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 
+      <button @click="checkAnswer" type="button" class="text-t-color 
+    bg-dark-green hover:bg-light-green focus:outline-none focus:ring-4 focus:ring-lighter-green
     font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 
-    dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-900">check answer</button>  
+    dark:bg-green-600 dark:hover:bg-dark-green dark:focus:ring-green-900">check answer</button>  
     <button @click="generateAnswer" type="button" class="space-x-[15px] text-white 
     bg-blue-600 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 
     font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 

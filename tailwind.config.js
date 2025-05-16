@@ -28,6 +28,7 @@ module.exports = {
         /* Kiwi Green Accent */
         'dark-green': 'rgba(138, 200, 134, 1)',
         'light-green': 'rgba(148, 212, 122, 1)',
+        'lighter-green':'rgb(159, 228, 131)',
         'orange':'rgba(246, 177, 81, 1)',
         'light-blue':'rgba(123, 161, 233, 1)',
         'purple':'rgba(123, 161, 233, 1)',

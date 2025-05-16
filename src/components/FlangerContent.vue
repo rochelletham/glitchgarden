@@ -94,22 +94,22 @@ export default {
     const horiSlider = document.querySelector('.hori-slider');
     const horiSliderValue = document.querySelector('.hori-slider-value');
 
-    horiSlider.addEventListener('input', function () {
-        // Synchronize input number with slider value
-        horiSliderValue.value = horiSlider.value; 
-        this.style.background = `linear-gradient(to right, rgba(7, 235, 123, 1) ${horiSlider.value}%,
-        rgba(38, 42, 45, 1) ${horiSlider.value}%)`;
-    });
+    // horiSlider.addEventListener('input', function () {
+    //     // Synchronize input number with slider value
+    //     horiSliderValue.value = horiSlider.value; 
+    //     this.style.background = `linear-gradient(to right, rgba(7, 235, 123, 1) ${horiSlider.value}%,
+    //     rgba(38, 42, 45, 1) ${horiSlider.value}%)`;
+    // });
 
-    horiSlider.addEventListener('input', function () {
-      let value = parseInt(horiSliderValue.value, 10);
-        if (value >= 0 && value <= 100) {
-          horiSlider.value = value;
-          horiSliderValue.value = horiSlider.value;
-          horiSlider.style.background = `linear-gradient(to right, rgba(7, 235, 123, 1) ${horiSlider.value}%,
-        rgba(38, 42, 45, 1) ${horiSlider.value}%)`;
-        }
-    });
+    // horiSlider.addEventListener('input', function () {
+    //   let value = parseInt(horiSliderValue.value, 10);
+    //     if (value >= 0 && value <= 100) {
+    //       horiSlider.value = value;
+    //       horiSliderValue.value = horiSlider.value;
+    //       horiSlider.style.background = `linear-gradient(to right, rgba(7, 235, 123, 1) ${horiSlider.value}%,
+    //     rgba(38, 42, 45, 1) ${horiSlider.value}%)`;
+    //     }
+    // });
 
   },
   methods: {
@@ -259,7 +259,7 @@ export default {
     <audioButton v-else @click="playAudio" id="playButton" class="cursor-pointer bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
       <img src="../svgs/play.svg" class="icon">
     </audioButton>
-    <audioButton @click="loopAudio" id="loopButton" class="cursor-pointer bg-gray-300 hover:bg-green-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center ease-in-out" :class="{ 'bg-green-300': isloopEnabled}">
+    <audioButton @click="loopAudio" id="loopButton" class="cursor-pointer bg-gray-300 hover:bg-dark-green text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center ease-in-out" :class="{ 'bg-light-green': isloopEnabled}">
       <img src="../svgs/loopEnabled.svg" class="icon"> 
     </audioButton>
     <audioButton v-if="mute" @click="muteAudio" id="muteButton" class="cursor-pointer bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
@@ -273,7 +273,7 @@ export default {
     <div>
       <p class="items-center flex">Yours
         <button @click="switchAudioMode">
-          <div class="w-16 h-10 flex items-center bg-gray-300 rounded-full p-1 duration-300 ease-in-out" :class="{ 'bg-green-300': !yoursActive}">
+          <div class="w-16 h-10 flex items-center bg-gray-300 rounded-full p-1 duration-300 ease-in-out" :class="{ 'bg-light-green': !yoursActive}">
             <div class="bg-white w-7 h-7 rounded-full shadow-md transform duration-300 ease-in-out" :class="{ 'translate-x-6': !yoursActive}"></div>
           </div>
         </button>
@@ -283,22 +283,22 @@ export default {
     <br>
     <div>
       <input type="range" @input="delayTimeUpdate" v-model="this.delayTimeVal" id="delayDur"
-      name="Delay Duration" min="0.0" max="0.01" step="0.001" value="0.0" class="hori-slider" >
+      name="Delay Duration" min="0.0" max="0.01" step="0.001" value="0.0" class="efx-slider" >
       <p>delay duration: {{ (this.delayTimeVal)*1000 }} ms</p>
-      <input id="hori-slider-value" type="number" class="hori-slider-value" min="0" max="100" value="0">
+      <!-- <input id="hori-slider-value" type="number" class="hori-slider-value" min="0" max="100" value="0"> -->
       
       <input type="range" @input="feedbackGainUpdate" v-model="this.feedbackGain" id="fdbkGain"
-      name="Feedback Gain" min="0" max="1.0" step=".1" value="0.0" class="hori-slider" >
+      name="Feedback Gain" min="0" max="1.0" step=".1" value="0.0" class="efx-slider" >
       <p>feedback gain: {{ (this.feedbackGain) }}</p>
       
       <input type="range" @input="wetDryUpdate" v-model="this.wetDryVal" id="wetDryMix"
-      name="Wet/Dry Mix" min="0.0" max="1.0" step="0.1" class="hori-slider" >
+      name="Wet/Dry Mix" min="0.0" max="1.0" step="0.1" class="efx-slider" >
       <p>dry/wet mix {{ (this.wetDryVal)*100 }}%</p>
       <br>
-      <button @click="checkAnswer" type="button" class="text-white 
-    bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 
+      <button @click="checkAnswer" type="button" class="text-t-color 
+    bg-dark-green hover:bg-light-green focus:outline-none focus:ring-4 focus:ring-lighter-green
     font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 
-    dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-900">check answer</button>  
+    dark:bg-green-600 dark:hover:bg-dark-green dark:focus:ring-green-900">check answer</button>  
     <button @click="generateAnswer" type="button" class="space-x-[15px] text-white 
     bg-blue-600 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 
     font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 
