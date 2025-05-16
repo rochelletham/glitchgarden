@@ -2,13 +2,16 @@
 
 set -e
 
+git checkout dev 
+
 npm run build
 
 cd dist
 
 git init
+git checkout -b main
 git add -A
-git commit -m "New Deployment"
-git push -f git@github.com:rochelletham/glitchgarden.git dev:gh-pages
+git commit -m "New Deployment from dev"
+git push -u git@github.com:rochelletham/glitchgarden.git main:gh-pages
 
 cd -
