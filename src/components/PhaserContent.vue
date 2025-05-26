@@ -108,8 +108,9 @@ export default {
     async loadBuffer() {
       try {
         // Fetch the WAV file
-        // const response = await fetch('/soundfiles/loop/electric_guitar.wav');
-        const response = await fetch('/soundfiles/loop/guitar.wav');
+        // Use URL from git repo
+        const audioPath = 'https://rochelletham.github.io/glitchgarden/soundfiles/loop/guitar.wav';
+        const response = await fetch(audioPath);
         // const response = await fetch('/soundfiles/loop/guitar_note.wav');
         const audioData = await response.arrayBuffer();
         this.audioBuffer = await this.context.decodeAudioData(audioData);
