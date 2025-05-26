@@ -107,8 +107,7 @@ export default {
       try {
         // Fetch the WAV file
         // Use URL from git repo
-        const baseUrl = 'https://rochelletham.github.io/glitchgarden'
-        const audioPath = `${baseUrl}/soundfiles/loop/guitar.wav`;
+        const audioPath = 'https://rochelletham.github.io/glitchgarden/soundfiles/loop/guitar.wav';
         const response = await fetch(audioPath);
         const audioData = await response.arrayBuffer();
         this.audioBuffer = await this.context.decodeAudioData(audioData);
