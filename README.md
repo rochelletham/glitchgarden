@@ -1,4 +1,6 @@
-# delay-proj
+# glitchgarden
+
+website available here: https://rochelletham.github.io/glitchgarden/
 
 ## Project setup
 ```
