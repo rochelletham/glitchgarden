@@ -315,7 +315,7 @@ export default {
         min="0.0"
         max="100"
         step="10"
-        value="0.5"
+        value="0.0"
         tickIncrement="10"
         @input="wetDryUpdate" 
         v-model="this.wetDryVal" 
@@ -348,7 +348,8 @@ export default {
       <p v-if="showScore">delay duration: {{ this.delayScore }}</p>
       <p v-if="showScore">feedback gain: {{ this.fdbkScore }}</p>
       <p v-if="showScore">dry/wet mix: {{ this.wetDryScore }}</p>
-      <p v-if="showScore">overall score: {{ this.score }} %</p>
+      <p v-if="showScore">overall score: {{ 100}} %</p>
+      <!-- <p v-if="showScore">overall score: {{ this.score }} %</p> -->
       <br class="vert-space">
     </div>
 

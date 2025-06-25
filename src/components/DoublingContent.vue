@@ -8,6 +8,7 @@ import '@/utils/effectProps.js';
 import {DOUBLING_MIN_DELAY} from '@/utils/effectProps.js';
 import {DOUBLING_MAX_DELAY} from '@/utils/effectProps.js';
 import {DOUBLING_FEEDBACK} from '@/utils/effectProps.js';
+import { HorizontalSlider } from '@/ui-components/HorizontalSlider.js';
 
 export default {
   name: 'DoublingContent',
@@ -76,9 +77,11 @@ export default {
     this.lfo.connect(depth).connect(this.delayNode.delayTime);
     this.lfo.start();
 
-    this.feedbackGain = 0.7;
+    this.feedbackGain = 0.0;
+    // this.feedbackGain = 0.7;
     this.lfo.frequency.value = 0.1;
-    this.delayTimeVal = 0.005;
+    this.delayTimeVal = 0.0;
+    // this.delayTimeVal = 0.005;
     this.delayNode.delayTime.value = this.delayTimeVal;
     this.feedbackNode.gain.value = this.feedbackGain;
     depth.gain.value = 0.004;
@@ -211,6 +214,7 @@ export default {
     },
     generateAnswer(event) {
       this.showScore = false; // hide the old answer if creating new answer now
+      this.resetSliders(event);
       this.exerciseNum++;
       this.ansDelayTimeVal = generateAnswer(DOUBLING_MIN_DELAY, DOUBLING_MAX_DELAY);
       this.ansFeedbackGain = generateAnswer(0, DOUBLING_FEEDBACK);
@@ -219,7 +223,10 @@ export default {
                 "\ndelayTime Ans: ", (this.ansDelayTimeVal*1000), 
                 "\nfdbk gain Ans: ", this.ansFeedbackGain,
                 "\nwetdry Ans: ", this.ansWetDryVal);
-    }
+      },
+      resetSliders(event) {
+        // TODO: for resetting the green
+      }
   },
 };
 
@@ -263,17 +270,54 @@ export default {
     </div>
     <br>
     <div>
-      <input type="range" @input="delayTimeUpdate" v-model="this.delayTimeVal" id="delayDur"
-      name="Delay Duration" min="0.0" max="0.1" step="0.001" value="0.0" class="efx-slider" >
+      <horizontal-slider
+        min="0.0"
+        max="0.1"
+        step="0.001"
+        value="0.0"
+        @input="delayTimeUpdate"
+        v-model="this.delayTimeVal" 
+        id="delayDur"
+        name="Delay Duration"
+      ></horizontal-slider>
       <p>delay duration: {{ (this.delayTimeVal)*1000 }} ms</p>
-      
-      <input type="range" @input="feedbackGainUpdate" v-model="this.feedbackGain" id="fdbkGain"
-      name="Feedback Gain" min="0" max="1.0" step=".1" value="0.0" class="efx-slider" >
+      <br>
+      <horizontal-slider
+        min="0.0"
+        max="1.0"
+        step="0.1"
+        value="0.7"
+        @input="feedbackGainUpdate" 
+        v-model="this.feedbackGain" 
+        id="fdbkGain"
+        name="Feedback Gain"
+      ></horizontal-slider>
       <p>feedback gain: {{ (this.feedbackGain) }}</p>
-      
-      <input type="range" @input="wetDryUpdate" v-model="this.wetDryVal" id="wetDryMix"
-      name="Wet/Dry Mix" min="0.0" max="1.0" step="0.1" class="efx-slider" >
+      <br>
+      <horizontal-slider
+        min="0.0"
+        max="1.0"
+        step="0.1"
+        value="0.0"
+        tickIncrement="10"
+        @input="wetDryUpdate" 
+        v-model="this.wetDryVal" 
+        id="wetDryMix"
+        name="Wet/Dry Mix"
+      ></horizontal-slider>
       <p>dry/wet mix {{ (this.wetDryVal)*100 }}%</p>
+      <br>
+      <!-- <input type="range" @input="delayTimeUpdate" v-model="this.delayTimeVal" id="delayDur"
+      name="Delay Duration" min="0.0" max="0.1" step="0.001" value="0.0" class="efx-slider" >
+      <p>delay duration: {{ (this.delayTimeVal)*1000 }} ms</p> -->
+      
+      <!-- <input type="range" @input="feedbackGainUpdate" v-model="this.feedbackGain" id="fdbkGain"
+      name="Feedback Gain" min="0" max="1.0" step=".1" value="0.0" class="efx-slider" >
+      <p>feedback gain: {{ (this.feedbackGain) }}</p> -->
+      
+      <!-- <input type="range" @input="wetDryUpdate" v-model="this.wetDryVal" id="wetDryMix"
+      name="Wet/Dry Mix" min="0.0" max="1.0" step="0.1" class="efx-slider" >
+      <p>dry/wet mix {{ (this.wetDryVal)*100 }}%</p> -->
       <br>
       <button @click="checkAnswer" type="button" class="text-t-color 
     bg-dark-green hover:bg-light-green focus:outline-none focus:ring-4 focus:ring-lighter-green
