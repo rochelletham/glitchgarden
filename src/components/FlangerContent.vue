@@ -30,7 +30,7 @@ export default {
       feedbackGain: 0.0,
       dryGainNode: null,
       wetGainNode: null,
-      wetDryVal: 0.5,   // 0 means 100% dry & 0% wet, 1 means 100% wet & 0% dry
+      wetDryVal: 0.0,   // 0 means 100% dry & 0% wet, 1 means 100% wet & 0% dry
       score: null,
       delayScore: null, 
       fdbkScore: null, 
@@ -77,7 +77,8 @@ export default {
 
     this.feedbackGain = 0.7;
     this.lfo.frequency.value = 0.1;
-    this.delayTimeVal = 0.005;
+    // this.delayTimeVal = 0.005;
+    this.delayTimeVal = 0.0;
     this.delayNode.delayTime.value = this.delayTimeVal;
     this.feedbackNode.gain.value = this.feedbackGain;
     depth.gain.value = 0.004;
@@ -150,7 +151,6 @@ export default {
       this.isPlaying = true;
       this.context.resume();
       this.loadAudio();
-
       this.bufferSource.connect(this.delayNode);
       this.bufferSource.connect(this.dryGainNode);
       this.bufferSource.start(0, this.playheadPos);
@@ -284,18 +284,55 @@ export default {
     </div>
     <br>
     <div>
-      <input type="range" @input="delayTimeUpdate" v-model="this.delayTimeVal" id="delayDur"
-      name="Delay Duration" min="0.0" max="0.01" step="0.001" value="0.0" class="efx-slider" >
+      <horizontal-slider
+        min="0.0"
+        max="0.01"
+        step="0.001"
+        value="0.0"
+        @input="delayTimeUpdate"
+        v-model="this.delayTimeVal" 
+        id="delayDur"
+        name="Delay Duration"
+      ></horizontal-slider>
       <p>delay duration: {{ (this.delayTimeVal)*1000 }} ms</p>
+      <br>
+      <horizontal-slider
+        min="0.0"
+        max="1.0"
+        step="0.1"
+        value="0.0"
+        @input="feedbackGainUpdate" 
+        v-model="this.feedbackGain" 
+        id="fdbkGain"
+        name="Feedback Gain"
+      ></horizontal-slider>
+      <p>feedback gain: {{ (this.feedbackGain) }}</p>
+      <br>
+      <horizontal-slider
+        min="0.0"
+        max="1.0"
+        step="0.1"
+        value="0.0"
+        displayMult="100"
+        tickIncrement="10"
+        @input="wetDryUpdate" 
+        v-model="this.wetDryVal" 
+        id="wetDryMix"
+        name="Wet/Dry Mix"
+      ></horizontal-slider>
+      <p>dry/wet mix {{ (this.wetDryVal)*100 }}%</p>
+      <!-- <input type="range" @input="delayTimeUpdate" v-model="this.delayTimeVal" id="delayDur"
+      name="Delay Duration" min="0.0" max="0.01" step="0.001" value="0.0" class="efx-slider" >
+      <p>delay duration: {{ (this.delayTimeVal)*1000 }} ms</p> -->
       <!-- <input id="hori-slider-value" type="number" class="hori-slider-value" min="0" max="100" value="0"> -->
       
-      <input type="range" @input="feedbackGainUpdate" v-model="this.feedbackGain" id="fdbkGain"
+      <!-- <input type="range" @input="feedbackGainUpdate" v-model="this.feedbackGain" id="fdbkGain"
       name="Feedback Gain" min="0" max="1.0" step=".1" value="0.0" class="efx-slider" >
-      <p>feedback gain: {{ (this.feedbackGain) }}</p>
+      <p>feedback gain: {{ (this.feedbackGain) }}</p> -->
       
-      <input type="range" @input="wetDryUpdate" v-model="this.wetDryVal" id="wetDryMix"
+      <!-- <input type="range" @input="wetDryUpdate" v-model="this.wetDryVal" id="wetDryMix"
       name="Wet/Dry Mix" min="0.0" max="1.0" step="0.1" class="efx-slider" >
-      <p>dry/wet mix {{ (this.wetDryVal)*100 }}%</p>
+      <p>dry/wet mix {{ (this.wetDryVal)*100 }}%</p> -->
       <br>
       <button @click="checkAnswer" type="button" class="text-t-color 
     bg-dark-green hover:bg-light-green focus:outline-none focus:ring-4 focus:ring-lighter-green

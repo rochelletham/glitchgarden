@@ -32,7 +32,7 @@ export default {
       feedbackGain: 0.0,
       dryGainNode: null,
       wetGainNode: null,
-      wetDryVal: 0.5,   // 0 means 100% dry & 0% wet, 1 means 100% wet & 0% dry
+      wetDryVal: 0.0,   // 0 means 100% dry & 0% wet, 1 means 100% wet & 0% dry
       score: null,
       delayScore: null, 
       fdbkScore: null, 

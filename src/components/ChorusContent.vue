@@ -7,6 +7,7 @@ import RadioButton from './RadioButton.vue';
 import {CHORUS_MIN_DELAY} from '@/utils/effectProps.js';
 import {CHORUS_MAX_DELAY} from '@/utils/effectProps.js';
 import {CHORUS_FEEDBACK} from '@/utils/effectProps.js';
+import { HorizontalSlider } from '@/ui-components/HorizontalSlider.js';
 
 export default {
   name: 'ChorusContent',
@@ -30,7 +31,7 @@ export default {
       feedbackGain: 0.0,
       dryGainNode: null,
       wetGainNode: null,
-      wetDryVal: 0.5,   // 0 means 100% dry & 0% wet, 1 means 100% wet & 0% dry
+      wetDryVal: 0.0,   // 0 means 100% dry & 0% wet, 1 means 100% wet & 0% dry
       score: null,
       delayScore: null, 
       fdbkScore: null, 
@@ -220,6 +221,25 @@ export default {
                 "\ndelayTime Ans: ", (this.ansDelayTimeVal*1000), 
                 "\nfdbk gain Ans: ", this.ansFeedbackGain,
                 "\nwetdry Ans: ", this.ansWetDryVal);
+    },
+    resetSliders(event) {
+      // this.delayTimeVal = 0.0;
+      // this.feedbackGain = 0.0;
+      // this.wetDryVal = 0.0;
+
+      // TODO: update so that the green on slider also resets
+      // const delayDurSlider = document.getElementById('delayDur');
+      // const fdbkGainSlider = document.getElementById('fdbkGain');
+      // const wetDryMixSlider = document.getElementById('wetDryMix');
+      // if (delayDurSlider) {
+      //   delayDurSlider.value = 0.0;
+      // }
+      // if (fdbkGainSlider) {
+      //   fdbkGainSlider.value = 0.0;
+      // }
+      // if (wetDryMixSlider) {
+      //   wetDryMixSlider.value = 0.0;
+      // }
     }
   },
 };
@@ -264,17 +284,54 @@ export default {
     </div>
     <br>
     <div>
-      <input type="range" @input="delayTimeUpdate" v-model="this.delayTimeVal" id="delayDur"
-      name="Delay Duration" min="0.0" max="0.03" step="0.001" value="0.0" class="efx-slider" >
+      <horizontal-slider
+        min="0.0"
+        max="0.03"
+        step="0.001"
+        value="0.0"
+        displayMult="1000"
+        @input="delayTimeUpdate"
+        v-model="this.delayTimeVal" 
+        id="delayDur"
+        name="Delay Duration"
+      ></horizontal-slider>
       <p>delay duration: {{ (this.delayTimeVal)*1000 }} ms</p>
-      
-      <input type="range" @input="feedbackGainUpdate" v-model="this.feedbackGain" id="fdbkGain"
-      name="Feedback Gain" min="0" max="1.0" step=".1" value="0.0" class="efx-slider" >
+      <br>
+      <horizontal-slider
+        min="0.0"
+        max="1.0"
+        step="0.1"
+        value="0.0"
+        @input="feedbackGainUpdate" 
+        v-model="this.feedbackGain" 
+        id="fdbkGain"
+        name="Feedback Gain"
+      ></horizontal-slider>
       <p>feedback gain: {{ (this.feedbackGain) }}</p>
-      
-      <input type="range" @input="wetDryUpdate" v-model="this.wetDryVal" id="wetDryMix"
-      name="Wet/Dry Mix" min="0.0" max="1.0" step="0.1" class="efx-slider" >
+      <br>
+      <horizontal-slider
+        min="0.0"
+        max="1.0"
+        step="0.1"
+        value="0.0"
+        tickIncrement="10"
+        @input="wetDryUpdate" 
+        v-model="this.wetDryVal" 
+        id="wetDryMix"
+        name="Wet/Dry Mix"
+      ></horizontal-slider>
       <p>dry/wet mix {{ (this.wetDryVal)*100 }}%</p>
+      <!-- <input type="range" @input="delayTimeUpdate" v-model="this.delayTimeVal" id="delayDur"
+      name="Delay Duration" min="0.0" max="0.03" step="0.001" value="0.0" class="efx-slider" >
+      <p>delay duration: {{ (this.delayTimeVal)*1000 }} ms</p> -->
+      
+      <!-- <input type="range" @input="feedbackGainUpdate" v-model="this.feedbackGain" id="fdbkGain"
+      name="Feedback Gain" min="0" max="1.0" step=".1" value="0.0" class="efx-slider" >
+      <p>feedback gain: {{ (this.feedbackGain) }}</p> -->
+      
+      <!-- <input type="range" @input="wetDryUpdate" v-model="this.wetDryVal" id="wetDryMix"
+      name="Wet/Dry Mix" min="0.0" max="1.0" step="0.1" class="efx-slider" >
+      <p>dry/wet mix {{ (this.wetDryVal)*100 }}%</p> -->
       <br>
       <button @click="checkAnswer" type="button" class="text-t-color 
     bg-dark-green hover:bg-light-green focus:outline-none focus:ring-4 focus:ring-lighter-green
