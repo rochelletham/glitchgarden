@@ -31,7 +31,7 @@ export default {
       feedbackGain: 0.0,
       dryGainNode: null,
       wetGainNode: null,
-      wetDryVal: 0.5,   // 0 means 100% dry & 0% wet, 1 means 100% wet & 0% dry
+      wetDryVal: 0.0,   // 0 means 100% dry & 0% wet, 1 means 100% wet & 0% dry
       score: null,
       delayScore: null, 
       fdbkScore: null, 
@@ -168,7 +168,7 @@ export default {
     },
     wetDryUpdate(event) {
       if (this.yoursActive) {
-        this.wetDryVal = Math.floor(event.target.value / 100);
+        this.wetDryVal = event.target.value;
         this.dryGainNode.gain.value = 1.0 - this.wetDryVal;
         this.wetGainNode.gain.value = this.wetDryVal;
         this.dryGainNode.gain.setValueAtTime(this.dryGainNode.gain.value, this.context.currentTime);
@@ -289,15 +289,15 @@ export default {
     <div>
       <horizontal-slider
         min="0.0"
-        max="5000.0"
-        step="100"
+        max="5.0"
+        step="0.001"
         value="0.0"
         @input="delayTimeUpdate"
         v-model="this.delayTimeVal" 
         id="delayDur"
         name="Delay Duration"
       ></horizontal-slider>
-      <p>delay duration: {{ (this.delayTimeVal) }} ms</p>
+      <p>delay duration: {{ (this.delayTimeVal)*1000 }} ms</p>
       <br>
       <horizontal-slider
         min="0.0"
@@ -313,16 +313,17 @@ export default {
       <br>
       <horizontal-slider
         min="0.0"
-        max="100"
-        step="10"
+        max="1.0"
+        step="0.1"
         value="0.0"
+        displayMult="100"
         tickIncrement="10"
         @input="wetDryUpdate" 
         v-model="this.wetDryVal" 
         id="wetDryMix"
         name="Wet/Dry Mix"
       ></horizontal-slider>
-      <p>dry/wet mix {{ (this.wetDryVal) }}%</p>
+      <p>dry/wet mix {{ (this.wetDryVal)*100 }}%</p>
       <br>
       <!-- <input type="range" @input="delayTimeUpdate" v-model="this.delayTimeVal" id="delayDur"
       name="Delay Duration" min="0.0" max="5" step="0.01" value="0.0" class="efx-slider" >
