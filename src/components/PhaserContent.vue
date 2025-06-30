@@ -209,9 +209,9 @@ export default {
     },
     checkAnswer(event) {
       // *1000 because in milliseconds
-      [this.delayScore, this.fdbkScore, this.wetDryScore, this.score] = 
-      checkAnswer((this.delayTimeVal)*1000, this.feedbackGain, this.wetDryVal,
-                  (this.ansDelayTimeVal)*1000, this.ansFeedbackGain, this.ansWetDryVal);  
+      [this.rateScore, this.depthScore, this.delayScore, this.fdbkScore, this.wetDryScore, this.score] = 
+      checkAnswer("phaser", (this.delayTimeVal)*1000, this.feedbackGain, this.wetDryVal,
+                  (this.ansDelayTimeVal)*1000, this.ansFeedbackGain, this.ansWetDryVal, this.rate, this.depth, this.ansRate, this.ansDepth);  
       this.showScore = true;
     },
     switchAudioMode(event) {
@@ -233,10 +233,14 @@ export default {
     generateAnswer(event) {
       this.showScore = false; // hide the old answer if creating new answer now
       this.exerciseNum++;
+      this.ansRate = generateAnswer(0,10);
+      this.ansDepth = generateAnswer(0,500);
       this.ansDelayTimeVal = generateAnswer(0,1);
       this.ansFeedbackGain = generateAnswer(0, 1.0);
       this.ansWetDryVal = generateAnswer(0.0,1.0);
       console.log("new answer:",
+                "\nrate Ans: ",  this.ansRate, 
+                "\ndepth Ans: ", this.ansDepth,
                 "\ndelayTime Ans: ", (this.ansDelayTimeVal*1000), 
                 "\nfdbk gain Ans: ", this.ansFeedbackGain,
                 "\nwetdry Ans: ", this.ansWetDryVal);
@@ -358,6 +362,8 @@ export default {
     font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 
     dark:bg-blue-800 dark:hover:bg-blue-700 dark:focus:ring-blue-600 ">next exercise</button> 
       <br><br>
+      <p v-if="showScore">lfo rate: {{ this.rateScore }}</p>
+      <p v-if="showScore">lfo depth: {{ this.depthScore }}</p>
       <p v-if="showScore">delay duration: {{ this.delayScore }}</p>
       <p v-if="showScore">feedback gain: {{ this.fdbkScore }}</p>
       <p v-if="showScore">dry/wet mix: {{ this.wetDryScore }}</p>

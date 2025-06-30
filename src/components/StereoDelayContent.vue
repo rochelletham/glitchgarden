@@ -256,7 +256,7 @@ export default {
     checkAnswer(event) {
       // *1000 because in milliseconds
       [this.delayScore, this.fdbkScore, this.wetDryScore, this.score] = 
-      checkAnswer((this.delayTimeValLeft)*1000, this.feedbackGainLeft, this.wetDryValLeft,
+      checkAnswer("stereoDelay", (this.delayTimeValLeft)*1000, this.feedbackGainLeft, this.wetDryValLeft,
                   (this.ansDelayTimeValLeft)*1000, this.ansFeedbackGainLeft, this.ansWetDryValLeft);  
       this.showScore = true;
     },

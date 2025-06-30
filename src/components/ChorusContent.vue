@@ -186,7 +186,7 @@ export default {
     checkAnswer(event) {
       // *1000 because in milliseconds
       [this.delayScore, this.fdbkScore, this.wetDryScore, this.score] = 
-      checkAnswer((this.delayTimeVal)*1000, this.feedbackGain, this.wetDryVal,
+      checkAnswer("chorus", (this.delayTimeVal)*1000, this.feedbackGain, this.wetDryVal,
                   (this.ansDelayTimeVal)*1000, this.ansFeedbackGain, this.ansWetDryVal);  
       this.showScore = true;
     },
