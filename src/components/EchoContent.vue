@@ -168,7 +168,7 @@ export default {
     },
     wetDryUpdate(event) {
       if (this.yoursActive) {
-        this.wetDryVal = event.target.value;
+        this.wetDryVal = Math.floor(event.target.value / 100);
         this.dryGainNode.gain.value = 1.0 - this.wetDryVal;
         this.wetGainNode.gain.value = this.wetDryVal;
         this.dryGainNode.gain.setValueAtTime(this.dryGainNode.gain.value, this.context.currentTime);
@@ -291,7 +291,7 @@ export default {
         min="0.0"
         max="5000.0"
         step="100"
-        value="0.005"
+        value="0.0"
         @input="delayTimeUpdate"
         v-model="this.delayTimeVal" 
         id="delayDur"
@@ -303,7 +303,7 @@ export default {
         min="0.0"
         max="1.0"
         step="0.1"
-        value="0.7"
+        value="0.0"
         @input="feedbackGainUpdate" 
         v-model="this.feedbackGain" 
         id="fdbkGain"
