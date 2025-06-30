@@ -287,10 +287,11 @@ export default {
     </div>
     <br>
     <div>
+      <!-- temp: step changed to 0.1 instead of 0.001 -->
       <horizontal-slider
         min="0.0"
         max="5.0"
-        step="0.001"
+        step="0.1" 
         value="0.0"
         @input="delayTimeUpdate"
         v-model="this.delayTimeVal" 

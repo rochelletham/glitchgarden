@@ -189,7 +189,8 @@ export class HorizontalSlider extends HTMLElement {
     this._valueInput.addEventListener('input', this._handleValueInput);
     this._sliderInput.addEventListener('input', this._handleSliderInput);
     // Update initial gradient
-    const initialPercentage = this._calculateGradientPercentage(this._value);
+    // const initialPercentage = this._calculateGradientPercentage(this._value);
+    const initialPercentage = this._calculateGradientPercentage(this._defaultVal);
     this._sliderInput.style.background = `linear-gradient(to right, 
     rgb(159, 228, 131) ${initialPercentage}%,
     rgba(38, 42, 45, 1) ${initialPercentage}%)`;

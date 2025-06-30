@@ -19,15 +19,19 @@ export default {
       isloopEnabled: true,
       numStages: 4,
       allPassFilters: [],
-      rate: 5, 
-      depth: 500, 
+      // TODO: fix so that the sliders start with these values
+      // rate: 5, 
+      // depth: 500, 
       resonance: 6,
-      feedbackVal: .9,
+      // feedbackVal: .9,
+      rate: 0,
+      depth: 0,
+      feedbackVal: 0.0,
       depthNode: null,
       feedbackNode: null,
       dryGainNode: null,
       wetGainNode: null,
-      wetDryVal: 0.5,   // 0 means 100% dry & 0% wet, 1 means 100% wet & 0% dry
+      wetDryVal: 0.0,   // 0 means 100% dry & 0% wet, 1 means 100% wet & 0% dry
       score: null,
       delayScore: null, 
       fdbkScore: null, 
@@ -53,7 +57,7 @@ export default {
     //**** LFO that will be fed into delay node  ****//
     // set up LFO. should osc between 0 and 1
     this.lfo = new OscillatorNode(this.context);
-    this.lfo.type = this.lfoType;
+    // this.lfo.type = this.lfoType;
     this.depthNode = new GainNode(this.context);
     this.depthNode.gain.setValueAtTime(this.depth, this.context.currentTime);
     //controls speed the notches and peaks move. det. how quickly modulation occurs. 
@@ -279,19 +283,71 @@ export default {
     </div>
     <br>
     <div>
-      <input type="range" @input="rateUpdate" v-model="this.rate" id="rate"
+      <!-- <input type="range" @input="rateUpdate" v-model="this.rate" id="rate"
       name="rate" min="0.0" max="10.0" step="0.1" class="efx-slider" >
-      <p>rate {{ this.rate }}</p>
-      <input type="range" @input="depthUpdate" v-model="this.depth" id="depth"
+      <p>rate {{ this.rate }}</p> -->
+      <horizontal-slider
+        min="0.0"
+        max="10"
+        step="0.1"
+        value="0.0"
+        :defaultVal="this.rate"
+        @input="rateUpdate"
+        v-model="this.rate" 
+        id="rate"
+        name="rate"
+      ></horizontal-slider>
+      <p>rate: {{ (this.rate) }}</p>
+      <br>
+      <!-- <input type="range" @input="depthUpdate" v-model="this.depth" id="depth"
       name="rate" min="100" max="500" step="10" class="efx-slider" >
-      <p>depth {{ this.depth }} Hz</p>
-      <input type="range" @input="feedbackUpdate" v-model="this.feedbackVal" id="feedback"
+      <p>depth {{ this.depth }} Hz</p> -->
+      <horizontal-slider
+        min="100"
+        max="500"
+        step="10"
+        value="0.0"
+        :defaultVal="this.depth"
+        @input="depthUpdate" 
+        v-model="this.depth" 
+        id="depth"
+        name="depth"
+      ></horizontal-slider>
+      <p>depth: {{ (this.depth) }} Hz</p>
+      <!-- <input type="range" @input="feedbackUpdate" v-model="this.feedbackVal" id="feedback"
       name="feedback" min="0.0" max="0.9" step="0.1" class="efx-slider" >
-      <p>feedback {{ this.feedbackVal }}</p>
-      <input type="range" @input="wetDryUpdate" v-model="this.wetDryVal" id="wetDryMix"
+      <p>feedback {{ this.feedbackVal }}</p> -->
+      <br>
+      <!-- :defaultVal="feedbackVal" -->
+      <horizontal-slider
+        min="0.0"
+        max="0.9"
+        step="0.1"
+        :value="feedbackVal"
+        :defaultVal="feedbackVal"
+        @input="feedbackUpdate" 
+        v-model="this.feedbackGain" 
+        id="feedback"
+        name="feedback"
+      ></horizontal-slider>
+      <p>feedback gain: {{ (this.feedbackVal) }}</p>
+      <br>
+      <!-- <input type="range" @input="wetDryUpdate" v-model="this.wetDryVal" id="wetDryMix"
       name="wet/dry mix" min="0.0" max="1.0" step="0.1" class="efx-slider" >
+      <p>dry/wet mix {{ (this.wetDryVal)*100 }}%</p> -->
+      <horizontal-slider
+        min="0.0"
+        max="1.0"
+        step="0.1"
+        value="0.0"
+        displayMult="100"
+        tickIncrement="10"
+        @input="wetDryUpdate" 
+        v-model="this.wetDryVal" 
+        id="wetDryMix"
+        name="Wet/Dry Mix"
+      ></horizontal-slider>
       <p>dry/wet mix {{ (this.wetDryVal)*100 }}%</p>
-    
       <br>
       <button @click="checkAnswer" type="button" class="text-t-color 
     bg-dark-green hover:bg-light-green focus:outline-none focus:ring-4 focus:ring-lighter-green

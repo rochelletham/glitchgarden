@@ -284,6 +284,7 @@ export default {
     </div>
     <br>
     <div>
+      <!-- temp: step changed to 0.01 instead of 0.001 -->
       <horizontal-slider
         min="0.0"
         max="0.01"
