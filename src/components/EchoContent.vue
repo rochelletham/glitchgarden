@@ -33,6 +33,8 @@ export default {
       wetGainNode: null,
       wetDryVal: 0.0,   // 0 means 100% dry & 0% wet, 1 means 100% wet & 0% dry
       score: null,
+      rateScore: null,
+      depthScore: null,
       delayScore: null, 
       fdbkScore: null, 
       wetDryScore: null,
@@ -41,6 +43,8 @@ export default {
       toggleMode: false,  // toggle state for yours vs expected audio
       mute: false,        // mute/unmute audio
       // answer key variables
+      ansRate: 5.0,
+      ansDepth: 100,
       ansDelayTimeVal: 0.5, 
       ansFeedbackGain: 0.5,
       ansWetDryVal: 0.5,  
@@ -188,8 +192,8 @@ export default {
     checkAnswer(event) {
       // *1000 because in milliseconds
       [this.delayScore, this.fdbkScore, this.wetDryScore, this.score] = 
-      checkAnswer((this.delayTimeVal)*1000, this.feedbackGain, this.wetDryVal,
-                  (this.ansDelayTimeVal)*1000, this.ansFeedbackGain, this.ansWetDryVal);  
+      checkAnswer("echo", (this.delayTimeVal)*1000, this.feedbackGain, this.wetDryVal,
+                  (this.ansDelayTimeVal)*1000, this.ansFeedbackGain, this.ansWetDryVal, this.rate, this.depth, this.ansRate, this.ansDepth);  
       this.showScore = true;
     },
     switchAudioMode(event) {
@@ -350,8 +354,7 @@ export default {
       <p v-if="showScore">delay duration: {{ this.delayScore }}</p>
       <p v-if="showScore">feedback gain: {{ this.fdbkScore }}</p>
       <p v-if="showScore">dry/wet mix: {{ this.wetDryScore }}</p>
-      <p v-if="showScore">overall score: {{ 100}} %</p>
-      <!-- <p v-if="showScore">overall score: {{ this.score }} %</p> -->
+      <p v-if="showScore">overall score: {{ this.score }} %</p>
       <br class="vert-space">
     </div>
 
