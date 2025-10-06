@@ -1,9 +1,11 @@
 <template>
     <nav class="p-4 w-full fixed top-0">
         <div class="container mx-auto flex items-center justify-between">
-            <div class="fixed left-8">
-                <a href="/" class="text-light-green text-2xl font-semibold whitespace-nowrap ml-10 hover:text-opacity-75">GlitchGarden</a>
+            <div class="justify-start h-auto flex">
+                <a href="/" class="w-[25%] h-[25%] object-left -mt-5 hover:opacity-75"><img src="../svgs/sproutlogo.svg"></a>
+                <a href="/" class="mt-4 ml-2 text-2xl text-light-green font-semibold hover:text-opacity-75">GlitchGarden</a>
             </div>
+
             <div class="text-t-color md:flex space-x-8 ml-auto hover:text-t-color">
                 <router-link :to="{ path: '/', query: { component: 'About' } }" class="text-light-green  px-3 py-2 -mr-7 hover:text-t-color">About</router-link>
                 <div class="relative"  @mouseleave="hideDropdown">
@@ -21,7 +23,7 @@
         </div>   
     </nav>
     <div class="h-16"></div>
-    <div class="h-3 bg-light-green"></div>
+    <div class="h-6 bg-light-green"></div>
 </template>
 
 
