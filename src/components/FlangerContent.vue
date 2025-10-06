@@ -7,6 +7,7 @@ import RadioButton from './RadioButton.vue';
 import {FLANGER_MIN_DELAY} from '@/utils/effectProps.js';
 import {FLANGER_MAX_DELAY} from '@/utils/effectProps.js';
 import {FLANGER_FEEDBACK} from '@/utils/effectProps.js';
+import eventManager from '@/utils/EventManager';
 
 export default {
   name: 'FlangerContent',
@@ -48,6 +49,7 @@ export default {
     };
   },
   mounted() {
+    eventManager.on('pause-audio', this.pauseAudio);
     this.context = new (window.AudioContext || window.webkitAudioContext)();
     this.bufferSource = new AudioBufferSourceNode(this.context);
     this.loadBuffer();
@@ -112,6 +114,9 @@ export default {
     //     }
     // });
 
+  },
+  beforeUnmount() {
+    eventManager.off('pause-audio', this.pauseAudio); // unlisten
   },
   methods: {
     startAudioContext() {

@@ -49,6 +49,7 @@ export default {
     };
   },
   mounted() {
+    eventManager.on('pause-audio', this.pauseAudio);
     this.context = new (window.AudioContext || window.webkitAudioContext)();
     this.bufferSource = new AudioBufferSourceNode(this.context);
     this.loadBuffer();

@@ -43,5 +43,5 @@ const router = createRouter({
   history: createMemoryHistory(),
   routes,
 })
-
+router.push({ query: { ...routes.query, t: Date.now() }});
 export default router;

@@ -8,6 +8,7 @@ import {CHORUS_MIN_DELAY} from '@/utils/effectProps.js';
 import {CHORUS_MAX_DELAY} from '@/utils/effectProps.js';
 import {CHORUS_FEEDBACK} from '@/utils/effectProps.js';
 import { HorizontalSlider } from '@/ui-components/HorizontalSlider.js';
+import eventManager from '@/utils/EventManager';
 
 export default {
   name: 'ChorusContent',
@@ -49,6 +50,7 @@ export default {
     };
   },
   mounted() {
+    eventManager.on('pause-audio', this.pauseAudio); // listen for pause-audio event
     this.context = new (window.AudioContext || window.webkitAudioContext)();
     this.bufferSource = new AudioBufferSourceNode(this.context);
     this.loadBuffer();
@@ -91,7 +93,9 @@ export default {
                 "delayTime Ans: ", (this.ansDelayTimeVal*1000),
                 "\nfdbk gain Ans: ", this.ansFeedbackGain,
                 "\nwetdry Ans: ", this.ansWetDryVal);
-
+  },
+  beforeUnmount() {
+    eventManager.off('pause-audio', this.pauseAudio); // unlisten
   },
   methods: {
     startAudioContext() {
