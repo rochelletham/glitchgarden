@@ -80,6 +80,9 @@ export default {
                 "\nwetdry Ans: ", this.ansWetDryVal);
     
   },
+  beforeUnmount() {
+    eventManager.off('pause-audio', this.pauseAudio); // unlisten
+  },
   methods: {
     startAudioContext() {
       if (this.context === null) {

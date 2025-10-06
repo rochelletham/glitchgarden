@@ -8,6 +8,7 @@ import {ECHO_MIN_DELAY} from '@/utils/effectProps.js';
 import {ECHO_MAX_DELAY} from '@/utils/effectProps.js';
 import {ECHO_FEEDBACK} from '@/utils/effectProps.js';
 import { HorizontalSlider } from '@/ui-components/HorizontalSlider.js';
+import eventManager from '@/utils/EventManager';
 
 export default {
   name: 'EchoContent',
@@ -53,6 +54,7 @@ export default {
     };
   },
   mounted() {
+    eventManager.on('pause-audio', this.pauseAudio);
     this.context = new (window.AudioContext || window.webkitAudioContext)();
     this.bufferSource = new AudioBufferSourceNode(this.context);
     this.loadBuffer();
@@ -98,6 +100,9 @@ export default {
                 "\nfdbk gain Ans: ", this.ansFeedbackGain,
                 "\nwetdry Ans: ", this.ansWetDryVal);
 
+  },
+  beforeUnmount() {
+    eventManager.off('pause-audio', this.pauseAudio);
   },
   methods: {
     startAudioContext() {

@@ -4,6 +4,7 @@ import '../assets/tailwind.css';
 import checkAnswer from '@/utils/AnswerHandling';
 import generateAnswer from '@/utils/GenerateAnswer';
 import RadioButton from './RadioButton.vue';
+import eventManager from '@/utils/EventManager';
 
 export default {
   name: 'PhaserContent',
@@ -49,6 +50,7 @@ export default {
     };
   },
   mounted() {
+    eventManager.on('pause-audio', this.pauseAudio);
     this.context = new (window.AudioContext || window.webkitAudioContext)();
     this.bufferSource = new AudioBufferSourceNode(this.context);
     this.loadAudio();
@@ -97,6 +99,9 @@ export default {
     this.dryGainNode.gain.value = 1.0;    // default to dry 100%
     this.bufferSource.connect(this.dryGainNode).connect(this.context.destination);
     //***** DONT TOUCH -- FOR DRY AUDIO *****// 
+  },
+  beforeUnmount() {
+    eventManager.off('pause-audio', this.pauseAudio); // unlisten
   },
   methods: {
     startAudioContext() {

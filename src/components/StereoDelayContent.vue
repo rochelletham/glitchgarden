@@ -3,6 +3,7 @@
 import '../assets/tailwind.css';
 import checkAnswer from '@/utils/AnswerHandling';
 import generateAnswer from '@/utils/GenerateAnswer';
+import eventManager from '@/utils/EventManager';
 
 export default {
   name: 'StereoDelayContent',
@@ -58,6 +59,7 @@ export default {
     };
   },
   mounted() {
+    eventManager.on('pause-audio', this.pauseAudio);
     this.context = new (window.AudioContext || window.webkitAudioContext)();
     this.bufferSource = new AudioBufferSourceNode(this.context);
     this.loadBuffer();
@@ -129,6 +131,9 @@ export default {
                 "\nfdbk gain Rt Ans: ", this.ansFeedbackGainRt,
                 "\nwetdry Rt Ans: ", this.ansWetDryValRt);
 
+  },
+  beforeUnmount() {
+    eventManager.off('pause-audio', this.pauseAudio); // unlisten
   },
   methods: {
     startAudioContext() {
