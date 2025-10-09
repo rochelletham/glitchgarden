@@ -53,23 +53,13 @@ export class HorizontalSlider extends HTMLElement {
         display: flex;
         flex-direction: row;
         align-items: center;
-        width: 75%;
-        height: 75%;
-        max-width: 480px;
-        max-height: 40px;
+        width: 480px;
+        height: 40px;
         gap: 5px; 
         position: relative;
-        padding: 2%;
-        margin-bottom: 1%;
-
-        // using % instead to accomodate for mobile view
-        // width: 480px;
-        // height: 40px;
-        // gap: 5px; 
-        // position: relative;
-        // padding: 10px;
-        // padding-top: 5px;
-        // margin-bottom: 10px;
+        padding: 10px;
+        padding-top: 5px;
+        margin-bottom: 10px;
       
       }
 
@@ -112,10 +102,8 @@ export class HorizontalSlider extends HTMLElement {
       .hori-slider::-webkit-slider-thumb {
         -webkit-appearance: none; 
         appearance: none;
-        // width: 12px;    /* because track width is 12px*/
-        width: 3%;
-        min-height: 33px; 
-        min-width: 12px; /* minimum width for better usability */
+        height: 33px; 
+        width: 12px;    /* because track width is 12px*/
         border: 1px solid rgb(255, 255, 255);
         border-radius: 3px;
         cursor: pointer; /* Pointer on hover */
