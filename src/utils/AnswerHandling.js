@@ -14,9 +14,9 @@ const calcScore = (scores) => {
 
 const scoreText = (state) => {
     if (state) {
-        return "correct";
+        return "within range!";
     } else {
-        return "incorrect";
+        return "not quite";
     }
 }
 
@@ -56,12 +56,10 @@ const checkAnswer = (type, userDelayDur, userFdbkGain, userWetDryVal, ansDelayDu
     }
     const rateScore = withinRange(userRate, ansRate, exerciseType.paramCorrectRanges.rate.beginner);
     const depthScore = withinRange(userDepth, ansDepth, exerciseType.paramCorrectRanges.depth.beginner);
-    const overallScore = calcScore([delayScore, fdbkScore, wetDryScore, rateScore, depthScore]);
+    const overallScore = calcScore([fdbkScore, wetDryScore, rateScore, depthScore]);
     // return ["correct", "correct", "correct", "correct", Math.round(100)];
     return [scoreText(delayScore), scoreText(fdbkScore), scoreText(wetDryScore), scoreText(rateScore),
         scoreText(depthScore), overallScore];
-    // const overallScore = calcScore([fdbkScore, wetDryScore]);
-    // return [scoreText(fdbkScore), scoreText(wetDryScore), overallScore];
 };
 
 export default checkAnswer;

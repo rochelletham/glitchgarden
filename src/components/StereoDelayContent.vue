@@ -408,11 +408,11 @@ export default {
     font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 
     dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900">next exercise</button> 
       <br><br>
-      <p v-if="showScore">delay duration: {{ this.delayScore }}</p>
-      <p v-if="showScore">feedback gain: {{ this.fdbkScore }}</p>
-      <p v-if="showScore">dry/wet mix: {{ this.wetDryScore }}</p>
-      <p v-if="showScore">overall score: {{ this.score }} %</p>
+      <p v-if="showScore"><b>delay duration:</b> {{ this.delayScore }}, expected: {{(this.ansDelayTimeVal)*1000}}</p>
+      <p v-if="showScore"><b>feedback gain:</b> {{ this.fdbkScore }}, expected: {{this.ansFeedbackGain}}</p>
+      <p v-if="showScore"><b>dry/wet mix:</b> {{ this.wetDryScore }}, expected: {{this.ansWetDryVal}}</p>
       <br class="vert-space">
+      <p v-if="showScore"><b>overall score:</b> {{ this.score }} %</p>
     </div>
 
 </template>
