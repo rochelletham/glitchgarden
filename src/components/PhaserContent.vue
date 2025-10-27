@@ -27,7 +27,6 @@ export default {
       // feedbackVal: .9,
       rate: 0,
       depth: 0,
-      feedbackVal: 0.0,
       feedbackGain: 0.0,
       depthNode: null,
       feedbackNode: null,
@@ -83,7 +82,7 @@ export default {
     this.feedbackNode = new GainNode(this.context);
     // feedback contributes to resonant and swirling character.
     // some of output from phaser fed back into input to enhance certain freq 
-    this.feedbackNode.gain.value = this.feedbackVal;
+    this.feedbackNode.gain.value = this.feedbackGain;
 
     // used for muting audio 
     this.wetGainNode = new GainNode(this.context);
@@ -181,8 +180,8 @@ export default {
     },
     feedbackUpdate(event) {
       if (this.yoursActive) {
-        this.feedbackVal = event.target.value;
-        this.feedbackNode.gain.setValueAtTime(this.feedbackVal, this.context.currentTime);
+        this.feedbackGain = event.target.value;
+        this.feedbackNode.gain.setValueAtTime(this.feedbackGain, this.context.currentTime);
       } 
     },
     rateUpdate(event) {
@@ -335,14 +334,14 @@ export default {
         min="0.0"
         max="0.9"
         step="0.1"
-        :value="feedbackVal"
-        :defaultVal="feedbackVal"
+        value="feedbackGain"
+        defaultVal="feedbackGain"
         @input="feedbackUpdate" 
         v-model="this.feedbackGain" 
         id="feedback"
         name="feedback"
       ></horizontal-slider>
-      <p>feedback gain: {{ (this.feedbackVal) }}</p>
+      <p>feedback gain: {{ (this.feedbackGain) }}</p>
       <br>
       <!-- <input type="range" @input="wetDryUpdate" v-model="this.wetDryVal" id="wetDryMix"
       name="wet/dry mix" min="0.0" max="1.0" step="0.1" class="efx-slider" >
