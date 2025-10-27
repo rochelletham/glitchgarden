@@ -65,12 +65,12 @@ export default {
     this.loadBuffer();
 
     this.dryGainNodeLeft = new GainNode(this.context);
-    this.delayNodeLeft = new DelayNode(this.context);
+    this.delayNodeLeft = new DelayNode(this.context, { maxDelayTime: 10 });
     this.feedbackNodeLeft = new GainNode(this.context);
     this.wetGainNodeLeft = new GainNode(this.context); // used for muting audio 
 
     this.dryGainNodeRt = new GainNode(this.context);
-    this.delayNodeRt = new DelayNode(this.context);
+    this.delayNodeRt = new DelayNode(this.context, { maxDelayTime: 10 });
     this.feedbackNodeRt = new GainNode(this.context);
     this.wetGainNodeRt = new GainNode(this.context); // used for muting audio 
     

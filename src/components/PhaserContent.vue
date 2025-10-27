@@ -28,6 +28,7 @@ export default {
       rate: 0,
       depth: 0,
       feedbackVal: 0.0,
+      feedbackGain: 0.0,
       depthNode: null,
       feedbackNode: null,
       dryGainNode: null,

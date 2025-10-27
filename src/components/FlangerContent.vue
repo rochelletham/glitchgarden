@@ -54,7 +54,7 @@ export default {
     this.bufferSource = new AudioBufferSourceNode(this.context);
     this.loadBuffer();
 
-    this.delayNode = new DelayNode(this.context);
+    this.delayNode = new DelayNode(this.context, { maxDelayTime: 10 });
     this.feedbackNode = new GainNode(this.context);
     // used for muting audio 
     this.wetGainNode = new GainNode(this.context);

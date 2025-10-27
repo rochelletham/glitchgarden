@@ -2,6 +2,7 @@ import { createMemoryHistory, createRouter } from 'vue-router'
 
 import App from '@/App.vue';
 import About from '@/components/About.vue';
+import PhaserContent from '@/components/PhaserContent.vue'
 import FlangerContent from '@/components/FlangerContent.vue'
 import ChorusContent from '@/components/ChorusContent.vue'
 import VibratoContent from '@/components/VibratoContent.vue'
@@ -15,27 +16,29 @@ const routes = [
     component: About},
   { path: '/', 
     name: 'Home', 
-    component: App,
-    props: route => ({ component: route.query.component })
-  },
-  { path: '/@/components/FlangerContent.vue', 
+    component: EchoContent},
+    // props: route => ({ component: route.query.component })},
+  { path: '/flanger', 
     name: 'FlangerContent',
     component: FlangerContent},
-  { path: '/@/components/ChorusContent.vue', 
+  { path: '/chorus', 
     name: 'ChorusContent',
     component: ChorusContent},
-  { path: '/@/components/VibratoContent.vue', 
+  { path: '/vibrato', 
     name: 'VibratoContent',
     component: VibratoContent},
-  { path: '/@/components/WhiteChorusContent.vue', 
+  { path: '/whitechorus', 
     name: 'WhiteChorusContent',
     component: WhiteChorusContent},
-  { path: '/@/components/DoublingContent.vue', 
+  { path: '/doubling', 
     name: 'DoublingContent',
     component: DoublingContent},
-  { path: '/@/components/EchoContent.vue', 
+  { path: '/echo', 
     name: 'EchoContent',
-    component: EchoContent
+    component: EchoContent},
+  { path: '/phaser', 
+    name: 'PhaserContent',
+    component: PhaserContent
   }
 ];
 

@@ -46,7 +46,7 @@ export default {
   props: {
     component: {
       type: String,
-      default: 'FlangerContent' // Default component
+      default: 'EchoContent' // Default component
     }
   },
   computed: {
