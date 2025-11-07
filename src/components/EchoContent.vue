@@ -327,7 +327,7 @@ export default {
         min="0"
         max="1"
         step="0.1"
-        value="-100"
+        value="0"
         tickIncrement="5"
         valueReadOnly=""
         convertValue=""
