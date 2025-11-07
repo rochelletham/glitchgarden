@@ -3,10 +3,9 @@
 import '../assets/tailwind.css';
 import checkAnswer from '@/utils/AnswerHandling';
 import generateAnswer from '@/utils/GenerateAnswer';
+import {Util} from "@/utils/Util.js";  
 import RadioButton from './RadioButton.vue';
-import {ECHO_MIN_DELAY} from '@/utils/effectProps.js';
-import {ECHO_MAX_DELAY} from '@/utils/effectProps.js';
-import {ECHO_FEEDBACK} from '@/utils/effectProps.js';
+import {ECHO_MIN_DELAY, ECHO_MAX_DELAY, ECHO_FEEDBACK} from '@/utils/effectProps.js';
 import { HorizontalSlider } from '@/ui-components/HorizontalSlider.js';
 import eventManager from '@/utils/EventManager';
 
@@ -41,16 +40,18 @@ export default {
       wetDryScore: null,
       showScore: false,
       yoursActive: true,   
-      toggleMode: false,  // toggle state for yours vs expected audio
       mute: false,        // mute/unmute audio
       // answer key variables
       ansRate: 5.0,
       ansDepth: 100,
-      ansDelayTimeVal: 0.5, 
+      ansDelayTimeVal: 500, 
       ansFeedbackGain: 0.5,
       ansWetDryVal: 0.5,  
       exerciseNum: 1,
-      showAudio: false
+      showAudio: false,
+      ECHO_MIN_DELAY: ECHO_MIN_DELAY, // in ms
+      ECHO_MAX_DELAY: ECHO_MAX_DELAY, // in ms
+      ECHO_FEEDBACK: ECHO_FEEDBACK
     };
   },
   mounted() {
@@ -96,7 +97,7 @@ export default {
     this.ansFeedbackGain = generateAnswer(0,ECHO_FEEDBACK);
     this.ansWetDryVal = generateAnswer(0.0,1.0);
     console.log(
-                "delayTime Ans: ", (this.ansDelayTimeVal*1000),
+                "delayTime Ans: ", this.ansDelayTimeVal,
                 "\nfdbk gain Ans: ", this.ansFeedbackGain,
                 "\nwetdry Ans: ", this.ansWetDryVal);
 
@@ -139,10 +140,10 @@ export default {
       }
     },
     playAudio() {
-      this.isPlaying = true;
+      console.log("clicked play audio");
       this.context.resume();
+      this.isPlaying = true;
       this.loadAudio();
-
       this.bufferSource.connect(this.delayNode);
       this.bufferSource.connect(this.dryGainNode);
       this.bufferSource.start(0, this.playheadPos);
@@ -150,6 +151,7 @@ export default {
     pauseAudio() {
       try {
         this.bufferSource.stop();
+        this.context.suspend();  // stop all web audio processing
         this.isPlaying = false;
         console.log('stopped audio');
         this.playheadPos = (this.context.currentTime > this.audioBuffer.duration) ? 0.0 : this.context.currentTime;
@@ -165,14 +167,16 @@ export default {
     },
     delayTimeUpdate(event) {
       if (this.yoursActive) {
-        this.delayTimeVal = event.target.value;
-        this.delayNode.delayTime.setValueAtTime(event.target.value, this.context.currentTime);
+        this.delayTimeVal = event.target.value; 
+        // convert ms to seconds
+        this.delayNode.delayTime.setValueAtTime(this.delayTimeVal / 1000, this.context.currentTime);
       } 
     },
     feedbackGainUpdate(event) {
       if (this.yoursActive) {
         this.feedbackGain = event.target.value;
         this.feedbackNode.gain.setValueAtTime(event.target.value, this.context.currentTime);
+        // console.log("gain lin to db", Util.lintodb(Number(this.feedbackGain)));
       } 
     },
     wetDryUpdate(event) {
@@ -197,24 +201,30 @@ export default {
     checkAnswer(event) {
       // *1000 because in milliseconds
       [this.delayScore, this.fdbkScore, this.wetDryScore, this.score] = 
-      checkAnswer("echo", (this.delayTimeVal)*1000, this.feedbackGain, this.wetDryVal,
-                  (this.ansDelayTimeVal)*1000, this.ansFeedbackGain, this.ansWetDryVal, this.rate, this.depth, this.ansRate, this.ansDepth);  
+      checkAnswer("echo", (this.delayTimeVal), this.feedbackGain, this.wetDryVal,
+                  (this.ansDelayTimeVal), this.ansFeedbackGain, this.ansWetDryVal, this.rate, this.depth, this.ansRate, this.ansDepth);  
       this.showScore = true;
     },
     switchAudioMode(event) {
-      this.toggleMode = !this.toggleMode;   // toggleMode = false --> yoursActive = true
       this.yoursActive = !this.yoursActive;
+      this.context.suspend();
       // TODO: modularize & fix this code -- right now very crude
       if (this.yoursActive) {
         this.delayNode.delayTime.setValueAtTime(this.delayTimeVal, this.context.currentTime);
         this.feedbackNode.gain.setValueAtTime(this.feedbackGain, this.context.currentTime);
         this.dryGainNode.gain.setValueAtTime(1.0 - this.wetDryVal, this.context.currentTime);
         this.wetGainNode.gain.setValueAtTime(this.wetDryVal, this.context.currentTime);
+        this.context.resume();
+        console.log("yours mode: ", this.delayNode.delayTime.value, this.feedbackNode.gain.value, this.wetGainNode.gain.value);
       } else {
-        this.delayNode.delayTime.setValueAtTime(this.ansDelayTimeVal, this.context.currentTime);
+        this.context.resume();
+        this.delayNode.delayTime.setValueAtTime(this.ansDelayTimeVal/1000, this.context.currentTime);
         this.feedbackNode.gain.setValueAtTime(this.ansFeedbackGain, this.context.currentTime);
         this.dryGainNode.gain.setValueAtTime(1.0 - this.ansWetDryVal, this.context.currentTime);
         this.wetGainNode.gain.setValueAtTime(this.ansWetDryVal, this.context.currentTime);
+        
+
+        console.log("expected mode: ", this.delayNode.delayTime.value, this.feedbackNode.gain.value, this.wetGainNode.gain.value);
       }
     },
     changeLfoType(newlfoType) {
@@ -230,7 +240,7 @@ export default {
       this.ansFeedbackGain = generateAnswer(0, ECHO_FEEDBACK);
       this.ansWetDryVal = generateAnswer(0.0,1.0);
       console.log("new answer:",
-                "\ndelayTime Ans: ", (this.ansDelayTimeVal*1000), 
+                "\ndelayTime Ans: ", this.ansDelayTimeVal, 
                 "\nfdbk gain Ans: ", this.ansFeedbackGain,
                 "\nwetdry Ans: ", this.ansWetDryVal);
     },
@@ -252,6 +262,10 @@ export default {
       // if (wetDryMixSlider) {
       //   wetDryMixSlider.value = 0.0;
       // }
+    },
+    // due to Vue templating, cannot directly call Util.lintodb
+    formatToDb(value) {
+      return Math.round(Util.lintodb(Number(value)));
     } 
   },
 };
@@ -298,28 +312,32 @@ export default {
     <div>
       <!-- temp: step changed to 0.1 instead of 0.001 -->
       <horizontal-slider
-        min="0.0"
-        max="5.0"
-        step="0.1" 
-        value="0.0"
+        :min="ECHO_MIN_DELAY"
+        :max="ECHO_MAX_DELAY"
+        step="50" 
+        numTicks="20"
+        :value="this.delayTimeVal"
         @input="delayTimeUpdate"
-        v-model="this.delayTimeVal" 
         id="delayDur"
         name="Delay Duration"
       ></horizontal-slider>
-      <p>delay duration: {{ (this.delayTimeVal)*1000 }} ms</p>
+      <p>delay duration: {{ this.delayTimeVal }} ms</p>
       <br>
+      
       <horizontal-slider
-        min="0.0"
-        max="1.0"
+        min="0"
+        max="1"
         step="0.1"
         value="0.0"
+        type="text"
+        tickIncrement="5"
+        valueReadOnly=""
         @input="feedbackGainUpdate" 
         v-model="this.feedbackGain" 
         id="fdbkGain"
         name="Feedback Gain"
       ></horizontal-slider>
-      <p>feedback gain: {{ (this.feedbackGain) }}</p>
+      <p>feedback gain: {{formatToDb(this.feedbackGain)}}</p>
       <br>
       <horizontal-slider
         min="0.0"
@@ -356,8 +374,8 @@ export default {
     font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 
     dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900">next exercise</button> 
       <br><br>
-      <p v-if="showScore"><b>delay duration:</b> {{ this.delayScore }}, expected: {{(this.ansDelayTimeVal)*1000}}</p>
-      <p v-if="showScore"><b>feedback gain:</b> {{ this.fdbkScore }}, expected: {{this.ansFeedbackGain}}</p>
+      <p v-if="showScore"><b>delay duration:</b> {{ this.delayScore }}, expected: {{this.ansDelayTimeVal}}</p>
+      <p v-if="showScore"><b>feedback gain:</b> {{ this.fdbkScore }}, expected: {{formatToDb(this.ansFeedbackGain)}} db</p>
       <p v-if="showScore"><b>dry/wet mix:</b> {{ this.wetDryScore }}, expected: {{this.ansWetDryVal}}</p>
       <br class="vert-space">
       <p v-if="showScore"><b>overall score:</b> {{ this.score }} %</p>

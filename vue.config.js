@@ -15,8 +15,6 @@ module.exports = defineConfig({
         ...options,
         compilerOptions: {
           isCustomElement: tag => tag === 'horizontal-slider' || tag === 'audioButton'
-          // isCustomElement: tag => tag.includes('HorizontalSlider') || tag.includes('vertical-slider') || tag.includes('vertical-slider-input') ||
-          //                         tag.includes('customButton')
         }
       }))
   }

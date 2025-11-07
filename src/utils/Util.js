@@ -12,7 +12,7 @@
  * GNU General Public License for more details.
  **/
 
-const Util = {
+export const Util = {
 
   createBufferMap: async (audioContext, sampleDataCollection) => {
     const bufferMap = {};
@@ -112,3 +112,4 @@ const Util = {
 };
 
 export default Util;
+

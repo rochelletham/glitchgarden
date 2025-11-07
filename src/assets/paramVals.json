@@ -141,8 +141,8 @@
         "paramCorrectRanges": {
             "delayDur":
                 {
-                    "beginner": [-200,200],
-                    "intermediate": [-100, 100],
+                    "beginner": [-500,500],
+                    "intermediate": [-200, 200],
                     "advanced": [-50,50]
                 }
             ,

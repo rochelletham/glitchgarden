@@ -1,3 +1,5 @@
+import {Util} from "@/utils/Util.js";  
+
 export class HorizontalSlider extends HTMLElement {
   constructor() {
     super();
@@ -10,7 +12,7 @@ export class HorizontalSlider extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ['min', 'max', 'step', 'value', 'tickIncrement'];
+    return ['min', 'max', 'step', 'value', 'numTicks', 'valueReadOnly', 'convertValue'];
   }
 
   connectedCallback() {
@@ -19,7 +21,10 @@ export class HorizontalSlider extends HTMLElement {
     this._max = Number(this.getAttribute('max')) || 5;
     this._step = Number(this.getAttribute('step')) || 0.1;
     this._value = Number(this.getAttribute('value'));
-    this._tickIncrement = Number(this.getAttribute('tickIncrement')) || 10;
+    this._numTicks = Number(this.getAttribute('numTicks'));
+    // handle value display different from internal value
+    this._valueReadOnly = this.hasAttribute('valueReadOnly');
+    this._convertValue = this.hasAttribute('convertValue');
 
     this._render();
     this._setupEventListeners();
@@ -40,13 +45,20 @@ export class HorizontalSlider extends HTMLElement {
         this[`_${name}`] = Number(newValue);
         this._updateInputs();
         break;
-      case 'tickIncrement':
+      case 'numTicks':
+        this._numTicks = Number(newValue);
+        break;
     }
   }
 
   _render() {
     const style = document.createElement('style');
     style.textContent = `
+      @media only screen and (max-width: 600px)  {
+        .hori-slider-container {
+          max-width:70%;
+        }
+      }
       .hori-slider-container {
         background-color: rgba(62, 66, 69, 1);
         border-radius: 3px;
@@ -63,51 +75,50 @@ export class HorizontalSlider extends HTMLElement {
       
       }
 
+      /* slider track */
       .hori-slider {
         -webkit-appearance: none;
         -moz-appearance: none;
-        // width: 200px;
         width:100%;
         height: 12px; 
         cursor: pointer;
         position: relative;
+        /* ensure slider track is under the tickmarks/thumb */
+        z-index: 1;
         align-items: center;
-        background: rgba(38, 42, 45, 1);
         outline: none;
-        opacity: 0.85;
-        writing-mode: horizontal-tb;
+        opacity: 0.95;
         margin: 0;
         border-radius: 3px;
+        /* tickmarks and the green progress track */
+        background-image:
+          linear-gradient(to right, rgba(103,105,107,1) 1px, transparent 1px),
+          linear-gradient(to right, rgba(159, 228, 131) var(--progress, 0%), rgba(38, 42, 45, 1) var(--progress, 0%));
+        background-repeat: repeat-x, no-repeat;
+        background-size: var(--tick-spacing, 30px) 100%, 100% 100%;
+        background-position: calc(var(--thumb-half, 6px)) center, 0 0;
       }
 
-      .hori-slider::before {
-        content: ''; 
-        position: absolute;
-        /* left: -50%; Extend tick marks to the left */
-        /* top: -50%;  */
-        background: repeating-linear-gradient(
-          to right, 
-          transparent 10px, 
-          transparent 30px, 
-          rgba(103, 105, 107, 1) 31px, 
-          rgba(103, 105, 107, 1) 32px 
-        ); 
-        z-index: -1; 
-        pointer-events: none;
-        height: 24px;
-        width: 100%;
+      .hori-slider::-webkit-slider-runnable-track { 
+        z-index: 0;
+        height: 12px; 
+      }
+      .hori-slider::-moz-range-track { 
+        z-index: 0;
+        height: 12px; 
       }
 
-      /* the knob of the slider */
+      /* thumb */
       .hori-slider::-webkit-slider-thumb {
         -webkit-appearance: none; 
         appearance: none;
+        transform: translateY(-25%);
         height: 33px; 
-        width: 12px;    /* because track width is 12px*/
+        width: 12px;
         border: 1px solid rgb(255, 255, 255);
         border-radius: 3px;
-        cursor: pointer; /* Pointer on hover */
-        background: linear-gradient(  /* for creating a line on the knob */
+        cursor: pointer;
+        background: linear-gradient(
           to right,
           transparent 38%,
           rgba(132, 137, 138, 1) 38%,
@@ -115,6 +126,13 @@ export class HorizontalSlider extends HTMLElement {
           transparent 56%
         );
         background-color: rgb(255, 255, 255);
+        position:relative;
+        z-index: 3; /* above ticks */
+      }
+
+      .hori-slider::-moz-range-thumb { 
+        position: relative;
+        z-index: 3; 
       }
 
       .hori-slider-value {
@@ -129,12 +147,9 @@ export class HorizontalSlider extends HTMLElement {
         height: 50%;
         font-size: 12px;
         color: rgba(132, 137, 138, 1); 
-        /* border: 1px solid rgba(132, 136, 138, 1); */
-        /* background-color: rgba(198, 198, 198, 1); */
         background-color: rgb(255, 255, 255);
         border: 1px solid rgba(198, 198, 198, 1);
         border-radius: 5px;
-        #textBox{ z-index:1000; }
       }
 
       .hori-slider-value:focus {
@@ -144,15 +159,18 @@ export class HorizontalSlider extends HTMLElement {
         color: white;
       }  
 
+      /* handled by javascript */
+      .hori-slider-tickmarks { 
+        display: none; 
+      }
+
       input::-webkit-outer-spin-button,
       input::-webkit-inner-spin-button {
         -webkit-appearance: none;
         margin: 0;
       }
-
-      input[type=number] {
-        -moz-appearance: textfield;
-      }
+      input[type=number] { 
+      -moz-appearance: textfield; }
     `;
 
     const html = `
@@ -169,6 +187,9 @@ export class HorizontalSlider extends HTMLElement {
                max="${this._max}" 
                step="${this._step}" 
                value="${this._value}">
+        <div class = "hori-slider-tickmarks" 
+              aria-hidden="true">
+        </div>
       </div>
     `;
 
@@ -185,48 +206,105 @@ export class HorizontalSlider extends HTMLElement {
   _setupEventListeners() {
     this._valueInput = this.shadowRoot.querySelector('.hori-slider-value');
     this._sliderInput = this.shadowRoot.querySelector('.hori-slider');
-
+    this._tickMarks = this.shadowRoot.querySelector('.hori-slider-tickmarks');
+    
+    if (this._valueReadOnly) {
+      // disable the value input 
+      this._valueInput.readOnly = true;
+      this._valueInput.style.pointerEvents = 'none';
+      this._valueInput.style.userSelect = 'none';
+      this._valueInput.tabIndex = -1;
+      // block arrow keys and mouse wheel changes
+      this._valueInput.addEventListener('keydown', (e) => e.preventDefault());
+      this._valueInput.addEventListener('wheel', (e) => e.preventDefault(), { passive: false });
+    }
+    
     this._valueInput.addEventListener('input', this._handleValueInput);
     this._sliderInput.addEventListener('input', this._handleSliderInput);
-    // Update initial gradient
-    // const initialPercentage = this._calculateGradientPercentage(this._value);
-    const initialPercentage = this._calculateGradientPercentage(this._defaultVal);
-    this._sliderInput.style.background = `linear-gradient(to right, 
-    rgb(159, 228, 131) ${initialPercentage}%,
-    rgba(38, 42, 45, 1) ${initialPercentage}%)`;
+
+    // handling the tick mark logistics
+    const setTickMarks = () => {
+      // number of intervals between min and max based on step
+      // if valid numTicks not given, just calculate based on range and step
+      const intervals = (!this._numTicks || this._numTicks <= 0) ? Math.round((this._max - this._min) / this._step) : this._numTicks;
+      // length of the track
+      const sliderRect = this._sliderInput.getBoundingClientRect();
+      const containerRect = this.shadowRoot.querySelector('.hori-slider-container').getBoundingClientRect();
+
+      // if layout not ready, retry on the next frame
+      if (!sliderRect) {
+        requestAnimationFrame(() => setTickMarks());
+      }
+      
+      // use thumb width from CSS, otherwise 12px
+      const sliderCS = getComputedStyle(this._sliderInput);
+      const thumbWidth = parseFloat(sliderCS.getPropertyValue('--hori-thumb-width')) || 12;
+      const thumbHalf = thumbWidth / 2;
+
+      // ensure that tickmarks line up with the slider thumb center as it travels
+      const travel = Math.max(0, sliderRect.width - thumbWidth);
+      const tickSpacing = travel / intervals;
+
+      this._sliderInput.style.setProperty('--thumb-half', `${thumbHalf}px`);
+      this._sliderInput.style.setProperty('--tick-spacing', `${tickSpacing}px`);
+      if (this._tickMarks) {
+        this._tickMarks.style.setProperty('--tick-spacing', `${tickSpacing}px`);
+        this._tickMarks.style.setProperty('--thumb-half', `${thumbHalf}px`);
+        // position overlay exactly over the visible range input track
+        const leftmargin = sliderRect.left - containerRect.left;
+        this._tickMarks.style.left = `${leftmargin}px`;
+        this._tickMarks.style.width = `${sliderRect.width}px`;
+        this._tickMarks.style.right = 'auto';
+      }
+      
+      // set the progress bar on top of the tick marks
+      const initialPercentage = this._calculateGradientPercentage(this._value ?? this._min);
+      this._sliderInput.style.setProperty('--progress', `${initialPercentage}%`);
+    };
+
+    setTickMarks();
+    this._resizeHandler = setTickMarks;
+
+    // adjust the tick marks if the window ever resizes
+    window.addEventListener('resize', this._resizeHandler);
   }
 
   _removeEventListeners() {
     this._valueInput.removeEventListener('input', this._handleValueInput);
     this._sliderInput.removeEventListener('input', this._handleSliderInput);
+    if (this._resizeHandler) {
+      window.removeEventListener('resize', this._resizeHandler);
+    }
   }
 
   _handleSliderInput(event) {
     const value = Number(event.target.value);
-    console.log(value);
     this._value = value;
-    this._valueInput.value = value;
+    this._valueInput.value = (this._valueReadOnly) ? Util.lintodb(value).toFixed() : value;
     // Update gradient with calculated percentage
     const percentage = this._calculateGradientPercentage(value);
-    this._sliderInput.style.background = `linear-gradient(to right, 
-    rgb(159, 228, 131) ${percentage}%,
-    rgba(38, 42, 45, 1) ${percentage}%)`;
-  
-  this._emitChangeEvent();
+    this._sliderInput.style.setProperty('--progress', `${percentage}%`);
+    this._emitChangeEvent();
   }
 
-  _handleValueInput(event) {
-    const value = Number(event.target.value);
+  _handleValueInput(event) { 
+    let value = Number(event.target.value);
     if (value >= this._min && value <= this._max) {
       this._value = value;
       this._sliderInput.value = value;
       // Update gradient with calculated percentage
-      const percentage = this._calculateGradientPercentage(value);
-      this._sliderInput.style.background = `linear-gradient(to right, 
-      rgb(159, 228, 131) ${percentage}%,
-      rgba(38, 42, 45, 1) ${percentage}%)`;
-      this._emitChangeEvent();
+    } else if (value < this._min) {            // just set to min
+      this._value = this._min;
+      this._sliderInput.value = this._min;
+      this._valueInput.value = this._min;
+    } else if (value > this._max) {            // just set to max
+      this._value = this._max;
+      this._sliderInput.value = this._max;
+      this._valueInput.value = this._max;
     }
+    const percentage = this._calculateGradientPercentage(value);
+    this._sliderInput.style.setProperty('--progress', `${percentage}%`);
+    this._emitChangeEvent();
   }
 
   _updateInputs() {
@@ -239,8 +317,8 @@ export class HorizontalSlider extends HTMLElement {
   _emitChangeEvent() {
     this.dispatchEvent(new CustomEvent('change', {
       detail: { value: this._value },
-      bubbles: true,
-      composed: true
+      bubbles: true, // event bubbles up to parent elements
+      composed: true // listeners outside shadow root can receive it
     }));
   }
 

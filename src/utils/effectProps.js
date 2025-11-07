@@ -27,5 +27,6 @@ export const WHITE_CHORUS_MIN_DELAY = 0.005;
 export const WHITE_CHORUS_MAX_DELAY = 0.03;
 export const DOUBLING_MIN_DELAY = 0.02;
 export const DOUBLING_MAX_DELAY = 0.1;
-export const ECHO_MIN_DELAY = 0.08;
-export const ECHO_MAX_DELAY = 5;    // inf, but setting a limit here
+// ***** echo delay range in ms ***** //
+export const ECHO_MIN_DELAY = 0.0;
+export const ECHO_MAX_DELAY = 2000;    // inf, but setting a limit here
