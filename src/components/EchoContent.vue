@@ -208,7 +208,6 @@ export default {
     switchAudioMode(event) {
       this.yoursActive = !this.yoursActive;
       this.context.suspend();
-      // TODO: modularize & fix this code -- right now very crude
       if (this.yoursActive) {
         this.delayNode.delayTime.setValueAtTime(this.delayTimeVal, this.context.currentTime);
         this.feedbackNode.gain.setValueAtTime(this.feedbackGain, this.context.currentTime);
@@ -328,16 +327,16 @@ export default {
         min="0"
         max="1"
         step="0.1"
-        value="0.0"
-        type="text"
+        value="-100"
         tickIncrement="5"
         valueReadOnly=""
+        convertValue=""
         @input="feedbackGainUpdate" 
         v-model="this.feedbackGain" 
         id="fdbkGain"
         name="Feedback Gain"
       ></horizontal-slider>
-      <p>feedback gain: {{formatToDb(this.feedbackGain)}}</p>
+      <p>feedback gain: {{formatToDb(this.feedbackGain)}} dB</p>
       <br>
       <horizontal-slider
         min="0.0"

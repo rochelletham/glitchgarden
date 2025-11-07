@@ -21,6 +21,9 @@ export class HorizontalSlider extends HTMLElement {
     this._max = Number(this.getAttribute('max')) || 5;
     this._step = Number(this.getAttribute('step')) || 0.1;
     this._value = Number(this.getAttribute('value'));
+    if (!Number.isFinite(this._value)) {
+      this._value = this._min;
+    } 
     this._numTicks = Number(this.getAttribute('numTicks'));
     // handle value display different from internal value
     this._valueReadOnly = this.hasAttribute('valueReadOnly');
@@ -218,6 +221,8 @@ export class HorizontalSlider extends HTMLElement {
       this._valueInput.addEventListener('keydown', (e) => e.preventDefault());
       this._valueInput.addEventListener('wheel', (e) => e.preventDefault(), { passive: false });
     }
+
+    this._updateInputs();
     
     this._valueInput.addEventListener('input', this._handleValueInput);
     this._sliderInput.addEventListener('input', this._handleSliderInput);
@@ -280,7 +285,11 @@ export class HorizontalSlider extends HTMLElement {
   _handleSliderInput(event) {
     const value = Number(event.target.value);
     this._value = value;
-    this._valueInput.value = (this._valueReadOnly) ? Util.lintodb(value).toFixed() : value;
+    if (this._convertValue) {
+      this._valueInput.value = Util.lintodb(value).toFixed();
+    } else {
+      this._valueInput.value = value;
+    }
     // Update gradient with calculated percentage
     const percentage = this._calculateGradientPercentage(value);
     this._sliderInput.style.setProperty('--progress', `${percentage}%`);
@@ -292,6 +301,7 @@ export class HorizontalSlider extends HTMLElement {
     if (value >= this._min && value <= this._max) {
       this._value = value;
       this._sliderInput.value = value;
+      // this._valueInput.value = value;
       // Update gradient with calculated percentage
     } else if (value < this._min) {            // just set to min
       this._value = this._min;
@@ -308,9 +318,16 @@ export class HorizontalSlider extends HTMLElement {
   }
 
   _updateInputs() {
+    const value = (!this._value === null) ? this._value : this._min;
     if (this._valueInput && this._sliderInput) {
-      this._valueInput.value = this._value;
+      this._value = value;
       this._sliderInput.value = this._value;
+      if (this._convertValue) {
+        // adjust display: when internal == 0 show -100
+        this._valueInput.value = (value === 0) ? -100 : Util.lintodb(value).toFixed(0);
+      } else {
+        this._valueInput.value = this._value;
+      }
     }
   }
 
