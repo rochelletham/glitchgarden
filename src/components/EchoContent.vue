@@ -63,7 +63,7 @@ export default {
     this.delayNode = new DelayNode(this.context, { maxDelayTime: 10 });
     this.feedbackNode = new GainNode(this.context);
     // used for muting audio 
-    this.wetGainNode = new GainNode(this.context);
+    this.wetGainNode = new GainNode(this.context, { gain: 0.0 }); // default to wet 0%
     
     this.bufferSource.connect(this.delayNode).connect(this.feedbackNode).connect(this.delayNode);
     this.delayNode.connect(this.wetGainNode).connect(this.context.destination);
@@ -170,13 +170,14 @@ export default {
         this.delayTimeVal = event.target.value; 
         // convert ms to seconds
         this.delayNode.delayTime.setValueAtTime(this.delayTimeVal / 1000, this.context.currentTime);
+        console.log("delay time val: ", this.delayTimeVal);
       } 
     },
     feedbackGainUpdate(event) {
       if (this.yoursActive) {
         this.feedbackGain = event.target.value;
         this.feedbackNode.gain.setValueAtTime(event.target.value, this.context.currentTime);
-        // console.log("gain lin to db", Util.lintodb(Number(this.feedbackGain)));
+        console.log(this.feedbackGain, " gain lin to db", Util.lintodb(Number(this.feedbackGain)));
       } 
     },
     wetDryUpdate(event) {
@@ -186,6 +187,7 @@ export default {
         this.wetGainNode.gain.value = this.wetDryVal;
         this.dryGainNode.gain.setValueAtTime(this.dryGainNode.gain.value, this.context.currentTime);
         this.wetGainNode.gain.setValueAtTime(this.wetGainNode.gain.value, this.context.currentTime);
+        console.log("wet/dry val: ", this.wetDryVal);
       } 
     },
     muteAudio(event) {
@@ -316,7 +318,7 @@ export default {
         step="50" 
         numTicks="20"
         valueReadOnly=""
-        :value="this.delayTimeVal"
+        v-model="this.delayTimeVal" 
         @input="delayTimeUpdate"
         id="delayDur"
         name="Delay Duration"
