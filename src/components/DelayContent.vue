@@ -182,7 +182,7 @@ export default {
   <div class="title">
     <h1 >Delay</h1>
     <h2  id="difficultyid">difficulty: beginner</h2>
-    <h2  id="exerciseNumid">exercise number: {{this.exerciseNum}}</h2>
+    <h2  id="exerciseNumid">Exercise Number: {{this.exerciseNum}}</h2>
     <br>
   </div>
     <div>

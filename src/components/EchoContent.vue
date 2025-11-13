@@ -277,8 +277,8 @@ export default {
   
   <div class="title">
     <h1 class="text-t-color">Echo</h1>
-    <h2  class="text-t-color"id="difficultyid">difficulty: beginner</h2>
-    <h2 class="text-t-color" id="exerciseNumid">exercise number: {{this.exerciseNum}}</h2>
+    <h2  class="text-t-color"id="difficultyid">Difficulty: Beginner</h2>
+    <h2 class="text-t-color" id="exerciseNumid">Exercise Number: {{this.exerciseNum}}</h2>
     <br>
   </div>
     <div>
@@ -323,7 +323,7 @@ export default {
         id="delayDur"
         name="Delay Duration"
       ></horizontal-slider>
-      <p>delay duration: {{ this.delayTimeVal }} ms</p>
+      <p>Delay Duration: {{ this.delayTimeVal }} ms</p>
       <br>
       
       <horizontal-slider
@@ -339,7 +339,7 @@ export default {
         id="fdbkGain"
         name="Feedback Gain"
       ></horizontal-slider>
-      <p>feedback gain: {{formatToDb(this.feedbackGain)}} dB</p>
+      <p>Feedback Gain: {{formatToDb(this.feedbackGain)}} dB</p>
       <br>
       <horizontal-slider
         min="0.0"
@@ -354,7 +354,7 @@ export default {
         id="wetDryMix"
         name="Wet/Dry Mix"
       ></horizontal-slider>
-      <p>dry/wet mix {{ (this.wetDryVal)*100 }}%</p>
+      <p>Dry/Wet mix {{ (this.wetDryVal)*100 }}%</p>
       <br>
       <!-- <input type="range" @input="delayTimeUpdate" v-model="this.delayTimeVal" id="delayDur"
       name="Delay Duration" min="0.0" max="5" step="0.01" value="0.0" class="efx-slider" >
@@ -366,7 +366,7 @@ export default {
       
       <!-- <input type="range" @input="wetDryUpdate" v-model="this.wetDryVal" id="wetDryMix"
       name="Wet/Dry Mix" min="0.0" max="1.0" step="0.1" class="efx-slider" >
-      <p>dry/wet mix {{ (this.wetDryVal)*100 }}%</p> -->
+      <p>Dry/Wet mix {{ (this.wetDryVal)*100 }}%</p> -->
       <br>
       <button @click="checkAnswer" type="button" class="text-t-color 
     bg-dark-green hover:bg-light-green focus:outline-none focus:ring-4 focus:ring-lighter-green
@@ -377,11 +377,11 @@ export default {
     font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 
     dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900">next exercise</button> 
       <br><br>
-      <p v-if="showScore"><b>delay duration:</b> {{ this.delayScore }}, expected: {{this.ansDelayTimeVal}}</p>
-      <p v-if="showScore"><b>feedback gain:</b> {{ this.fdbkScore }}, expected: {{formatToDb(this.ansFeedbackGain)}} db</p>
-      <p v-if="showScore"><b>dry/wet mix:</b> {{ this.wetDryScore }}, expected: {{this.ansWetDryVal}}</p>
+      <p v-if="showScore"><b>Delay Duration:</b> {{ this.delayScore }}, expected: {{this.ansDelayTimeVal}}</p>
+      <p v-if="showScore"><b>Feedback Gain:</b> {{ this.fdbkScore }}, expected: {{formatToDb(this.ansFeedbackGain)}} db</p>
+      <p v-if="showScore"><b>Dry/Wet Mix:</b> {{ this.wetDryScore }}, expected: {{this.ansWetDryVal}}</p>
       <br class="vert-space">
-      <p v-if="showScore"><b>overall score:</b> {{ this.score }} %</p>
+      <p v-if="showScore"><b>Overall Score:</b> {{ this.score }} %</p>
     </div>
 
 </template>

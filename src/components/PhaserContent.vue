@@ -261,8 +261,8 @@ export default {
   
   <div class="title">
     <h1 >Phaser</h1>
-    <h2 id="difficultyid">difficulty: beginner</h2>
-    <h2  id="exerciseNumid">exercise number: {{this.exerciseNum}}</h2>
+    <h2 id="difficultyid">Difficulty: Beginner</h2>
+    <h2  id="exerciseNumid">Exercise Number: {{this.exerciseNum}}</h2>
     <br>
   </div>
     <div>
@@ -308,7 +308,7 @@ export default {
         id="rate"
         name="rate"
       ></horizontal-slider>
-      <p>rate: {{ (this.rate) }}</p>
+      <p>Rate: {{ (this.rate) }}</p>
       <br>
       <!-- <input type="range" @input="depthUpdate" v-model="this.depth" id="depth"
       name="rate" min="100" max="500" step="10" class="efx-slider" >
@@ -324,7 +324,7 @@ export default {
         id="depth"
         name="depth"
       ></horizontal-slider>
-      <p>depth: {{ (this.depth) }} Hz</p>
+      <p>Depth: {{ (this.depth) }} Hz</p>
       <!-- <input type="range" @input="feedbackUpdate" v-model="this.feedbackVal" id="feedback"
       name="feedback" min="0.0" max="0.9" step="0.1" class="efx-slider" >
       <p>feedback {{ this.feedbackVal }}</p> -->
@@ -341,7 +341,7 @@ export default {
         id="feedback"
         name="feedback"
       ></horizontal-slider>
-      <p>feedback gain: {{ (this.feedbackGain) }}</p>
+      <p>Feedback Gain: {{ (this.feedbackGain) }}</p>
       <br>
       <!-- <input type="range" @input="wetDryUpdate" v-model="this.wetDryVal" id="wetDryMix"
       name="wet/dry mix" min="0.0" max="1.0" step="0.1" class="efx-slider" >
@@ -358,7 +358,7 @@ export default {
         id="wetDryMix"
         name="Wet/Dry Mix"
       ></horizontal-slider>
-      <p>dry/wet mix {{ (this.wetDryVal)*100 }}%</p>
+      <p>Dry/Wet Mix {{ (this.wetDryVal)*100 }}%</p>
       <br>
       <button @click="checkAnswer" type="button" class="text-t-color 
     bg-dark-green hover:bg-light-green focus:outline-none focus:ring-4 focus:ring-lighter-green
@@ -369,12 +369,12 @@ export default {
     font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 
     dark:bg-blue-800 dark:hover:bg-blue-700 dark:focus:ring-blue-600 ">next exercise</button> 
       <br><br>
-      <p v-if="showScore"><b>lfo rate:</b> {{ this.rateScore }}, expected: {{ this.ansRate }}</p>
-      <p v-if="showScore"><b>lfo depth:</b> {{ this.depthScore }}, expected: {{ this.ansDepth }}</p>
-      <p v-if="showScore"><b>feedback gain:</b> {{ this.fdbkScore }}, expected: {{this.ansFeedbackGain}}</p>
-      <p v-if="showScore"><b>dry/wet mix:</b> {{ this.wetDryScore }}, expected: {{this.ansWetDryVal}}</p>
+      <p v-if="showScore"><b>LFO Rate:</b> {{ this.rateScore }}, expected: {{ this.ansRate }}</p>
+      <p v-if="showScore"><b>LFO Depth:</b> {{ this.depthScore }}, expected: {{ this.ansDepth }}</p>
+      <p v-if="showScore"><b>Feedback Gain:</b> {{ this.fdbkScore }}, expected: {{this.ansFeedbackGain}}</p>
+      <p v-if="showScore"><b>Dry/Wet Mix:</b> {{ this.wetDryScore }}, expected: {{this.ansWetDryVal}}</p>
       <br class="vert-space">
-      <p v-if="showScore"><b>overall score:</b> {{ this.score }} %</p>
+      <p v-if="showScore"><b>Overall Score:</b> {{ this.score }} %</p>
     </div>
 
 </template>

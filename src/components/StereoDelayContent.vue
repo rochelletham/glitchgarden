@@ -332,8 +332,8 @@ export default {
   
   <div class="title">
     <h1 >Stereo Delay</h1>
-    <h2  id="difficultyid">difficulty: beginner</h2>
-    <h2  id="exerciseNumid">exercise number: {{this.exerciseNum}}</h2>
+    <h2  id="difficultyid">Difficulty: Beginner</h2>
+    <h2  id="exerciseNumid">Exercise Number: {{this.exerciseNum}}</h2>
     <br>
   </div>
     <div>
@@ -368,7 +368,7 @@ export default {
     <div>
       <input type="range" @input="delayTimeUpdateLeft" v-model="this.delayTimeValLeft" id="delayDurLeft"
       name="Left Delay Duration Left" min="0.0" max="0.03" step="0.001" value="0.0" class="efx-slider" >
-      <p>left delay duration: {{ (this.delayTimeValLeft)*1000 }} ms</p>
+      <p>left Delay Duration: {{ (this.delayTimeValLeft)*1000 }} ms</p>
       
       <input type="range" @input="feedbackGainUpdateLeft" v-model="this.feedbackGainLeft" id="fdbkGainLeft"
       name="Left Feedback Gain" min="0" max=".9" step=".1" value="0.0" class="efx-slider" >
@@ -376,7 +376,7 @@ export default {
       
       <input type="range" @input="wetDryUpdateLeft" v-model="this.wetDryValLeft" id="wetDryMixLeft"
       name="Left Wet/Dry Mix" min="0.0" max="1.0" step="0.1" class="efx-slider" >
-      <p>left dry/wet mix {{ (this.wetDryValLeft)*100 }}%</p>
+      <p>left Dry/Wet Mix {{ (this.wetDryValLeft)*100 }}%</p>
 
       <input type="range" @input="outputGainUpdateLeft" v-model="this.outputGainLeft" id="outputGainLeft"
       name="Left Output Gain" min="0.0" max="1" step="0.1" value="0.0" class="efx-slider" >
@@ -384,7 +384,7 @@ export default {
 
       <input type="range" @input="delayTimeUpdateRt" v-model="this.delayTimeValRt" id="delayDurRt"
       name="Right Delay Duration" min="0.0" max="0.03" step="0.001" value="0.0" class="efx-slider" >
-      <p>right delay duration: {{ (this.delayTimeValRt)*1000 }} ms</p>
+      <p>right Delay Duration: {{ (this.delayTimeValRt)*1000 }} ms</p>
       
       <input type="range" @input="feedbackGainUpdateRt" v-model="this.feedbackGainRt" id="fdbkGainRt"
       name="Right Feedback Gain" min="0" max=".9" step=".1" value="0.0" class="efx-slider" >
@@ -392,7 +392,7 @@ export default {
       
       <input type="range" @input="wetDryUpdateRt" v-model="this.wetDryValRt" id="wetDryMixRt"
       name="Right Wet/Dry Mix" min="0.0" max="1.0" step="0.1" class="efx-slider" >
-      <p>right dry/wet mix {{ (this.wetDryValRt)*100 }}%</p>
+      <p>right Dry/Wet Mix {{ (this.wetDryValRt)*100 }}%</p>
       
       <input type="range" @input="outputGainUpdateRt" v-model="this.outputGainRt" id="outputGainRt"
       name="Right Output Gain" min="0.0" max="1" step="0.1" value="0.0" class="efx-slider" >
@@ -408,11 +408,11 @@ export default {
     font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 
     dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900">next exercise</button> 
       <br><br>
-      <p v-if="showScore"><b>delay duration:</b> {{ this.delayScore }}, expected: {{(this.ansDelayTimeVal)*1000}}</p>
-      <p v-if="showScore"><b>feedback gain:</b> {{ this.fdbkScore }}, expected: {{this.ansFeedbackGain}}</p>
-      <p v-if="showScore"><b>dry/wet mix:</b> {{ this.wetDryScore }}, expected: {{this.ansWetDryVal}}</p>
+      <p v-if="showScore"><b>Delay Duration:</b> {{ this.delayScore }}, expected: {{(this.ansDelayTimeVal)*1000}}</p>
+      <p v-if="showScore"><b>Feedback Gain:</b> {{ this.fdbkScore }}, expected: {{this.ansFeedbackGain}}</p>
+      <p v-if="showScore"><b>Dry/Wet Mix:</b> {{ this.wetDryScore }}, expected: {{this.ansWetDryVal}}</p>
       <br class="vert-space">
-      <p v-if="showScore"><b>overall score:</b> {{ this.score }} %</p>
+      <p v-if="showScore"><b>Overall Score:</b> {{ this.score }} %</p>
     </div>
 
 </template>

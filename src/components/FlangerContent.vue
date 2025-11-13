@@ -255,8 +255,8 @@ export default {
   
   <div class="title">
     <h1 >Flanger</h1>
-    <h2  id="difficultyid">difficulty: beginner</h2>
-    <h2  id="exerciseNumid">exercise number: {{this.exerciseNum}}</h2>
+    <h2  id="difficultyid">Difficulty: Beginner</h2>
+    <h2  id="exerciseNumid">Exercise Number: {{this.exerciseNum}}</h2>
     <br>
   </div>
     <div>
@@ -300,7 +300,7 @@ export default {
         id="delayDur"
         name="Delay Duration"
       ></horizontal-slider>
-      <p>delay duration: {{ (this.delayTimeVal)*1000 }} ms</p>
+      <p>Delay Duration: {{ (this.delayTimeVal)*1000 }} ms</p>
       <br>
       <horizontal-slider
         min="0.0"
@@ -312,7 +312,7 @@ export default {
         id="fdbkGain"
         name="Feedback Gain"
       ></horizontal-slider>
-      <p>feedback gain: {{ (this.feedbackGain) }}</p>
+      <p>Feedback Gain: {{ (this.feedbackGain) }}</p>
       <br>
       <horizontal-slider
         min="0.0"
@@ -326,7 +326,7 @@ export default {
         id="wetDryMix"
         name="Wet/Dry Mix"
       ></horizontal-slider>
-      <p>dry/wet mix {{ (this.wetDryVal)*100 }}%</p>
+      <p>Dry/Wet Mix {{ (this.wetDryVal)*100 }}%</p>
       <!-- <input type="range" @input="delayTimeUpdate" v-model="this.delayTimeVal" id="delayDur"
       name="Delay Duration" min="0.0" max="0.01" step="0.001" value="0.0" class="efx-slider" >
       <p>delay duration: {{ (this.delayTimeVal)*1000 }} ms</p> -->
@@ -349,11 +349,11 @@ export default {
     font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 
     dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900">next exercise</button> 
       <br><br>
-      <p v-if="showScore"><b>delay duration:</b> {{ this.delayScore }}, expected: {{(this.ansDelayTimeVal)*1000}}</p>
-      <p v-if="showScore"><b>feedback gain:</b> {{ this.fdbkScore }}, expected: {{this.ansFeedbackGain}}</p>
-      <p v-if="showScore"><b>dry/wet mix:</b> {{ this.wetDryScore }}, expected: {{this.ansWetDryVal}}</p>
+      <p v-if="showScore"><b>Delay Duration:</b> {{ this.delayScore }}, expected: {{(this.ansDelayTimeVal)*1000}}</p>
+      <p v-if="showScore"><b>Feedback Gain:</b> {{ this.fdbkScore }}, expected: {{this.ansFeedbackGain}}</p>
+      <p v-if="showScore"><b>Dry/Wet Mix:</b> {{ this.wetDryScore }}, expected: {{this.ansWetDryVal}}</p>
       <br class="vert-space">
-      <p v-if="showScore"><b>overall score:</b> {{ this.score }} %</p>
+      <p v-if="showScore"><b>Overall Score:</b> {{ this.score }} %</p>
     </div>
 
 </template>
