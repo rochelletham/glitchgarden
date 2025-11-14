@@ -234,7 +234,8 @@ export class HorizontalSlider extends HTMLElement {
       // initialize display value
       this._valueInput.value = (this._value * 100).toFixed();
     } else {
-      this._valueInput.value = this._value;
+      this._value = this._min;
+      this._valueInput.value = this._min;
     }
     
     this._valueInput.addEventListener('input', this._handleValueInput);
@@ -276,7 +277,7 @@ export class HorizontalSlider extends HTMLElement {
       }
       
       // TODO: fix weird value box bug, should set to correct initial value
-      this._value = this._min > this._value ? this._min : this._value; 
+      // this._value = this._min > this._value ? this._min : this._value;
       this._valueInput.value = this._value;
       this._sliderInput.value = this._value;
       // set the progress bar on top of the tick marks

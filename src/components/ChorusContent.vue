@@ -46,7 +46,7 @@ export default {
       ansWetDryVal: 0.5,  
       exerciseNum: 1,
       showAudio: false, 
-      CHORUS_MIN_DELAY: CHORUS_MIN_DELAY, // in ms TODO check
+      CHORUS_MIN_DELAY: CHORUS_MIN_DELAY, // in ms 
       CHORUS_MAX_DELAY: CHORUS_MAX_DELAY, // in ms
       CHORUS_FEEDBACK: CHORUS_FEEDBACK
     };
@@ -82,7 +82,7 @@ export default {
 
     this.feedbackGain = 0.0;
     this.lfo.frequency.value = 0.1;
-    this.delayTimeVal = 0.005;
+    this.delayTimeVal = CHORUS_MIN_DELAY; 
     this.delayNode.delayTime.value = this.delayTimeVal;
     this.feedbackNode.gain.value = this.feedbackGain;
     depth.gain.value = 0.004;
@@ -161,7 +161,8 @@ export default {
     delayTimeUpdate(event) {
       if (this.yoursActive) {
         this.delayTimeVal = event.target.value;
-        this.delayNode.delayTime.setValueAtTime(event.target.value, this.context.currentTime);
+        // convert ms to seconds
+        this.delayNode.delayTime.setValueAtTime(this.delayTimeVal / 1000, this.context.currentTime);
       } 
     },
     feedbackGainUpdate(event) {
@@ -297,10 +298,10 @@ export default {
       <horizontal-slider
         :min="CHORUS_MIN_DELAY"
         :max="CHORUS_MAX_DELAY"
-        step="50"
-        numTicks="20"
+        step="1"
+        numTicks="5"
         valueReadOnly=""
-        :value="this.delayTimeVal"
+        v-model="this.delayTimeVal"
         @input="delayTimeUpdate"
         id="delayDur"
         name="Delay Duration"
@@ -328,6 +329,7 @@ export default {
         step="0.1"
         value="0.0"
         valueReadOnly=""
+        displayMult="100"
         tickIncrement="10"
         @input="wetDryUpdate" 
         v-model="this.wetDryVal" 
