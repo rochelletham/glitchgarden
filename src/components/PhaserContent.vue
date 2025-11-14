@@ -382,8 +382,8 @@ export default {
     dark:bg-blue-800 dark:hover:bg-blue-700 dark:focus:ring-blue-600 ">next exercise</button> 
       <br><br>
       <p v-if="showScore"><b>LFO Rate:</b> {{ this.rateScore }}, expected: {{ this.ansRate }}</p>
-      <p v-if="showScore"><b>LFO Depth:</b> {{ this.depthScore }}, expected: {{ this.ansDepth }}</p>
-      <p v-if="showScore"><b>Feedback Gain:</b> {{ this.fdbkScore }}, expected: {{this.ansFeedbackGain}}</p>
+      <p v-if="showScore"><b>LFO Depth:</b> {{ this.depthScore }}, expected: {{ this.ansDepth }} Hz</p>
+      <p v-if="showScore"><b>Feedback Gain:</b> {{ this.fdbkScore }}, expected: {{this.ansFeedbackGain}} dB</p>
       <p v-if="showScore"><b>Dry/Wet Mix:</b> {{ this.wetDryScore }}, expected: {{this.ansWetDryVal}}</p>
       <br class="vert-space">
       <p v-if="showScore"><b>Overall Score:</b> {{ this.score }} %</p>

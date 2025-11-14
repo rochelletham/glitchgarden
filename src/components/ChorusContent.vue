@@ -3,7 +3,7 @@
 import '../assets/tailwind.css';
 import checkAnswer from '@/utils/AnswerHandling';
 import generateAnswer from '@/utils/GenerateAnswer';
-import {Util} from "@/utils/Util.js";  
+import {Util} from "@/utils/Util.js"; 
 import RadioButton from './RadioButton.vue';
 import {CHORUS_MIN_DELAY, CHORUS_MAX_DELAY, CHORUS_FEEDBACK} from '@/utils/effectProps.js';
 import { HorizontalSlider } from '@/ui-components/HorizontalSlider.js';
@@ -358,8 +358,8 @@ export default {
     font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 
     dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900">next exercise</button> 
       <br><br>
-      <p v-if="showScore"><b>Delay Duration:</b> {{ this.delayScore }}, expected: {{(this.ansDelayTimeVal)*1000}}</p>
-      <p v-if="showScore"><b>Feedback Gain:</b> {{ this.fdbkScore }}, expected: {{this.ansFeedbackGain}}</p>
+      <p v-if="showScore"><b>Delay Duration:</b> {{ this.delayScore }}, expected: {{this.ansDelayTimeVal}} ms</p>
+      <p v-if="showScore"><b>Feedback Gain:</b> {{ this.fdbkScore }}, expected: {{this.ansFeedbackGain}} dB</p>
       <p v-if="showScore"><b>Dry/Wet Mix:</b> {{ this.wetDryScore }}, expected: {{this.ansWetDryVal}}</p>
       <br class="vert-space">
       <p v-if="showScore"><b>Overall Score:</b> {{ this.score }} %</p>

@@ -86,9 +86,9 @@ export default {
     // this.feedbackGain = 0.7;
     this.feedbackGain = 0.0; // default to no feedback
     this.lfo.frequency.value = 0.1;
-    // this.delayTimeVal = 0.005;
+    // in ms. when setting delayNode, be sure to convert back to seconds
     this.delayTimeVal = 0.0; // default to no delay
-    this.delayNode.delayTime.value = this.delayTimeVal;
+    this.delayNode.delayTime.value = this.delayTimeVal / 1000;
     this.feedbackNode.gain.value = this.feedbackGain;
     depth.gain.value = 0.004;
     
@@ -186,7 +186,6 @@ export default {
         this.wetGainNode.gain.value = this.wetDryVal;
         this.dryGainNode.gain.setValueAtTime(this.dryGainNode.gain.value, this.context.currentTime);
         this.wetGainNode.gain.setValueAtTime(this.wetGainNode.gain.value, this.context.currentTime);
-        console.log("wet/dry val: ", this.wetDryVal);
       } 
     },
     muteAudio(event) {
@@ -310,7 +309,6 @@ export default {
     </div>
     <br>
     <div>
-      <!-- temp: step changed to 0.1 instead of 0.001 -->
       <horizontal-slider
         :min="ECHO_MIN_DELAY"
         :max="ECHO_MAX_DELAY"
@@ -375,8 +373,8 @@ export default {
     font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 
     dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900">next exercise</button> 
       <br><br>
-      <p v-if="showScore"><b>Delay Duration:</b> {{ this.delayScore }}, expected: {{this.ansDelayTimeVal}}</p>
-      <p v-if="showScore"><b>Feedback Gain:</b> {{ this.fdbkScore }}, expected: {{formatToDb(this.ansFeedbackGain)}} db</p>
+      <p v-if="showScore"><b>Delay Duration:</b> {{ this.delayScore }}, expected: {{this.ansDelayTimeVal}} ms</p>
+      <p v-if="showScore"><b>Feedback Gain:</b> {{ this.fdbkScore }}, expected: {{formatToDb(this.ansFeedbackGain)}} dB</p>
       <p v-if="showScore"><b>Dry/Wet Mix:</b> {{ this.wetDryScore }}, expected: {{this.ansWetDryVal}}</p>
       <br class="vert-space">
       <p v-if="showScore"><b>Overall Score:</b> {{ this.score }} %</p>

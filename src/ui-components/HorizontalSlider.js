@@ -303,8 +303,13 @@ export class HorizontalSlider extends HTMLElement {
   _handleSliderInput(event) {
     const value = Number(event.target.value);
     this._value = value;
-    this._valueInput.value = (this._dbconvertValue) ? Util.lintodb(value).toFixed() : value;
-    this._valueInput.value = (this._displayMult) ? (this._valueInput.value * 100).toFixed() : value;
+    if (this._dbconvertValue) {
+      this._valueInput.value = Util.lintodb(value).toFixed();
+    } else if (this._displayMult) {
+      this._valueInput.value = (this._valueInput.value * 100).toFixed();
+    } else {
+      this._valueInput.value = this._value;
+    }
     // Update gradient with calculated percentage
     const percentage = this._calculateGradientPercentage(value);
     this._sliderInput.style.setProperty('--progress', `${percentage}%`);
