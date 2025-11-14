@@ -3,11 +3,11 @@
 import '../assets/tailwind.css';
 import checkAnswer from '@/utils/AnswerHandling';
 import generateAnswer from '@/utils/GenerateAnswer';
+import {Util} from "@/utils/Util.js"; 
 import RadioButton from './RadioButton.vue';
-import {FLANGER_MIN_DELAY} from '@/utils/effectProps.js';
-import {FLANGER_MAX_DELAY} from '@/utils/effectProps.js';
-import {FLANGER_FEEDBACK} from '@/utils/effectProps.js';
+import {FLANGER_MIN_DELAY, FLANGER_MAX_DELAY} from '@/utils/effectProps.js';
 import eventManager from '@/utils/EventManager';
+import { HorizontalSlider } from '@/ui-components/HorizontalSlider.js';
 
 export default {
   name: 'FlangerContent',
@@ -45,7 +45,9 @@ export default {
       ansFeedbackGain: 0.5,
       ansWetDryVal: 0.5,  
       exerciseNum: 1,
-      showAudio: false
+      showAudio: false,
+      FLANGER_MIN_DELAY: FLANGER_MIN_DELAY,
+      FLANGER_MAX_DELAY: FLANGER_MAX_DELAY
     };
   },
   mounted() {
@@ -56,8 +58,8 @@ export default {
 
     this.delayNode = new DelayNode(this.context, { maxDelayTime: 10 });
     this.feedbackNode = new GainNode(this.context);
-    // used for muting audio 
-    this.wetGainNode = new GainNode(this.context);
+    // used for muting audio, default to 0% wet 
+    this.wetGainNode = new GainNode(this.context, {gain: 0.0});
     
     this.bufferSource.connect(this.delayNode).connect(this.feedbackNode).connect(this.delayNode);
     this.delayNode.connect(this.wetGainNode).connect(this.context.destination);
@@ -77,20 +79,20 @@ export default {
     this.lfo.connect(depth).connect(this.delayNode.delayTime);
     this.lfo.start();
 
-    this.feedbackGain = 0.7;
+    this.feedbackGain = 0.0;
     this.lfo.frequency.value = 0.1;
-    // this.delayTimeVal = 0.005;
-    this.delayTimeVal = 0.0;
+    this.delayTimeVal = FLANGER_MIN_DELAY;
     this.delayNode.delayTime.value = this.delayTimeVal;
     this.feedbackNode.gain.value = this.feedbackGain;
     depth.gain.value = 0.004;
     
     // now randomly generating the answer 
+    console.log(FLANGER_MIN_DELAY, FLANGER_MAX_DELAY);
     this.ansDelayTimeVal = generateAnswer(FLANGER_MIN_DELAY, FLANGER_MAX_DELAY);
     this.ansFeedbackGain = generateAnswer(0,1.0);
     this.ansWetDryVal = generateAnswer(0.0,1.0);
     console.log(
-                "delayTime Ans: ", (this.ansDelayTimeVal*1000),
+                "delayTime Ans: ", this.ansDelayTimeVal,
                 "\nfdbk gain Ans: ", this.ansFeedbackGain,
                 "\nwetdry Ans: ", this.ansWetDryVal);
 
@@ -179,7 +181,8 @@ export default {
     delayTimeUpdate(event) {
       if (this.yoursActive) {
         this.delayTimeVal = event.target.value;
-        this.delayNode.delayTime.setValueAtTime(event.target.value, this.context.currentTime);
+        // convert ms to seconds
+        this.delayNode.delayTime.setValueAtTime(this.delayTimeVal / 1000, this.context.currentTime);
       } 
     },
     feedbackGainUpdate(event) {
@@ -243,9 +246,13 @@ export default {
       this.ansWetDryVal = generateAnswer(0.0,1.0);
       console.log("new answer:",
                 "\ndelayTime Ans: ", (this.ansDelayTimeVal*1000), 
-                "\nfdbk gain Ans: ", this.ansFeedbackGain,
+                "\nfdbk gain Ans: ", formatToDb(this.ansFeedbackGain),
                 "\nwetdry Ans: ", this.ansWetDryVal);
-    }
+    },
+    // due to Vue templating, cannot directly call Util.lintodb
+    formatToDb(value) {
+      return Math.round(Util.lintodb(Number(value)));
+    } 
   },
 };
 
@@ -291,34 +298,38 @@ export default {
     <div>
       <!-- temp: step changed to 0.01 instead of 0.001 -->
       <horizontal-slider
-        min="0.0"
-        max="0.01"
-        step="0.001"
-        value="0.0"
+        :min="FLANGER_MIN_DELAY"
+        :max="FLANGER_MAX_DELAY"
+        step="1"
+        numTicks="9"
+        valueReadOnly=""
         @input="delayTimeUpdate"
         v-model="this.delayTimeVal" 
         id="delayDur"
         name="Delay Duration"
       ></horizontal-slider>
-      <p>Delay Duration: {{ (this.delayTimeVal)*1000 }} ms</p>
+      <p>Delay Duration: {{ this.delayTimeVal }} ms</p>
       <br>
       <horizontal-slider
         min="0.0"
         max="1.0"
         step="0.1"
         value="0.0"
+        dbConvertValue=""
+        valueReadOnly=""
         @input="feedbackGainUpdate" 
         v-model="this.feedbackGain" 
         id="fdbkGain"
         name="Feedback Gain"
       ></horizontal-slider>
-      <p>Feedback Gain: {{ (this.feedbackGain) }}</p>
+      <p>Feedback Gain: {{ formatToDb(this.feedbackGain) }} dB</p>
       <br>
       <horizontal-slider
         min="0.0"
         max="1.0"
         step="0.1"
         value="0.0"
+        valueReadOnly=""
         displayMult="100"
         tickIncrement="10"
         @input="wetDryUpdate" 
@@ -349,8 +360,8 @@ export default {
     font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2 
     dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900">next exercise</button> 
       <br><br>
-      <p v-if="showScore"><b>Delay Duration:</b> {{ this.delayScore }}, expected: {{(this.ansDelayTimeVal)*1000}}</p>
-      <p v-if="showScore"><b>Feedback Gain:</b> {{ this.fdbkScore }}, expected: {{this.ansFeedbackGain}}</p>
+      <p v-if="showScore"><b>Delay Duration:</b> {{ this.delayScore }}, expected: {{this.ansDelayTimeVal}}</p>
+      <p v-if="showScore"><b>Feedback Gain:</b> {{ this.fdbkScore }}, expected: {{formatToDb(this.ansFeedbackGain)}}</p>
       <p v-if="showScore"><b>Dry/Wet Mix:</b> {{ this.wetDryScore }}, expected: {{this.ansWetDryVal}}</p>
       <br class="vert-space">
       <p v-if="showScore"><b>Overall Score:</b> {{ this.score }} %</p>

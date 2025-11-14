@@ -170,14 +170,13 @@ export default {
         this.delayTimeVal = event.target.value; 
         // convert ms to seconds
         this.delayNode.delayTime.setValueAtTime(this.delayTimeVal / 1000, this.context.currentTime);
-        console.log("delay time val: ", this.delayTimeVal);
       } 
     },
     feedbackGainUpdate(event) {
       if (this.yoursActive) {
         this.feedbackGain = event.target.value;
         this.feedbackNode.gain.setValueAtTime(event.target.value, this.context.currentTime);
-        console.log(this.feedbackGain, " gain lin to db", Util.lintodb(Number(this.feedbackGain)));
+        // console.log(this.feedbackGain, " gain lin to db", Util.lintodb(Number(this.feedbackGain)));
       } 
     },
     wetDryUpdate(event) {
@@ -331,9 +330,8 @@ export default {
         max="1"
         step="0.1"
         value="0"
-        tickIncrement="5"
         valueReadOnly=""
-        convertValue=""
+        dbconvertValue=""
         @input="feedbackGainUpdate" 
         v-model="this.feedbackGain" 
         id="fdbkGain"
@@ -354,7 +352,7 @@ export default {
         id="wetDryMix"
         name="Wet/Dry Mix"
       ></horizontal-slider>
-      <p>Dry/Wet mix {{ (this.wetDryVal)*100 }}%</p>
+      <p>Dry/Wet Mix {{ (this.wetDryVal)*100 }}%</p>
       <br>
       <!-- <input type="range" @input="delayTimeUpdate" v-model="this.delayTimeVal" id="delayDur"
       name="Delay Duration" min="0.0" max="5" step="0.01" value="0.0" class="efx-slider" >

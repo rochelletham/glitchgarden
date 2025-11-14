@@ -12,7 +12,7 @@ export class HorizontalSlider extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ['min', 'max', 'step', 'value', 'numTicks', 'valueReadOnly', 'convertValue'];
+    return ['min', 'max', 'step', 'value', 'numTicks', 'valueReadOnly', 'dbconvertValue', 'displayMult'];
   }
 
   connectedCallback() {
@@ -24,7 +24,8 @@ export class HorizontalSlider extends HTMLElement {
     this._numTicks = Number(this.getAttribute('numTicks'));
     // handle value display different from internal value
     this._valueReadOnly = this.hasAttribute('valueReadOnly');
-    this._convertValue = this.hasAttribute('convertValue');
+    this._dbconvertValue = this.hasAttribute('dbconvertValue');
+    this._displayMult = this.hasAttribute('displayMult');
 
     this._render();
     this._setupEventListeners();
@@ -225,9 +226,15 @@ export class HorizontalSlider extends HTMLElement {
       this._valueInput.addEventListener('keydown', (e) => e.preventDefault());
       this._valueInput.addEventListener('wheel', (e) => e.preventDefault(), { passive: false });
     }
-    if (this._convertValue) {
+    // edge cases for adjusting the display in value box
+    if (this._dbconvertValue) {
       // initialize display value
       this._valueInput.value = Util.lintodb(this._value).toFixed();
+    } else if (this._displayMult) {
+      // initialize display value
+      this._valueInput.value = (this._value * 100).toFixed();
+    } else {
+      this._valueInput.value = this._value;
     }
     
     this._valueInput.addEventListener('input', this._handleValueInput);
@@ -268,8 +275,12 @@ export class HorizontalSlider extends HTMLElement {
         this._tickMarks.style.right = 'auto';
       }
       
+      // TODO: fix weird value box bug, should set to correct initial value
+      this._value = this._min > this._value ? this._min : this._value; 
+      this._valueInput.value = this._value;
+      this._sliderInput.value = this._value;
       // set the progress bar on top of the tick marks
-      const initialPercentage = this._calculateGradientPercentage(this._value ?? this._min);
+      const initialPercentage = this._calculateGradientPercentage(this._value);
       this._sliderInput.style.setProperty('--progress', `${initialPercentage}%`);
     };
 
@@ -291,7 +302,8 @@ export class HorizontalSlider extends HTMLElement {
   _handleSliderInput(event) {
     const value = Number(event.target.value);
     this._value = value;
-    this._valueInput.value = (this._convertValue) ? Util.lintodb(value).toFixed() : value;
+    this._valueInput.value = (this._dbconvertValue) ? Util.lintodb(value).toFixed() : value;
+    this._valueInput.value = (this._displayMult) ? (this._valueInput.value * 100).toFixed() : value;
     // Update gradient with calculated percentage
     const percentage = this._calculateGradientPercentage(value);
     this._sliderInput.style.setProperty('--progress', `${percentage}%`);
@@ -321,10 +333,10 @@ export class HorizontalSlider extends HTMLElement {
 
   _updateInputs() {
     if (this._valueInput && this._sliderInput) {
-      if (this._convertValue) {
+      if (this._dbconvertValue) {
         this._valueInput.value = Util.lintodb(this._value).toFixed();
-      } else {
-        this._valueInput.value = this._value;
+      } else if (this._displayMult) {
+        this._valueInput.value = (this._value * 100).toFixed();
       }
       this._sliderInput.value = this._value;
     }

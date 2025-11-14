@@ -16,17 +16,21 @@ export const DOUBLING_FEEDFWD = 0.7; // 0.7071
 export const ECHO_FEEDFWD = 1.0;  // <=1.0
 
 
-// ***** delay range in s ***** //
-export const VIBRATO_MIN_DELAY = 0.0;
-export const VIBRATO_MAX_DELAY = 0.005;
-export const FLANGER_MIN_DELAY = 0.001;
-export const FLANGER_MAX_DELAY = 0.01;
-export const CHORUS_MIN_DELAY = 0.005;
-export const CHORUS_MAX_DELAY = 0.03;
-export const WHITE_CHORUS_MIN_DELAY = 0.005;
-export const WHITE_CHORUS_MAX_DELAY = 0.03;
-export const DOUBLING_MIN_DELAY = 0.02;
-export const DOUBLING_MAX_DELAY = 0.1;
-// ***** echo delay range in ms ***** //
+// ***** delay range in ms ***** //
 export const ECHO_MIN_DELAY = 0.0;
 export const ECHO_MAX_DELAY = 2000;    // inf, but setting a limit here
+export const FLANGER_MIN_DELAY = 1;
+export const FLANGER_MAX_DELAY = 10;
+export const VIBRATO_MIN_DELAY = 0.0;
+export const VIBRATO_MAX_DELAY = 5;
+export const CHORUS_MIN_DELAY = 5;
+export const CHORUS_MAX_DELAY = 30;
+export const WHITE_CHORUS_MIN_DELAY = 5;
+export const WHITE_CHORUS_MAX_DELAY = 30;
+export const DOUBLING_MIN_DELAY = 20;
+export const DOUBLING_MAX_DELAY = 100;
+
+
+// phaser special case
+export const PHASER_MIN_DEPTH = 100;
+export const PHASER_MAX_DEPTH = 500;

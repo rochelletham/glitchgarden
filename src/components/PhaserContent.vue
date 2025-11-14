@@ -3,6 +3,8 @@
 import '../assets/tailwind.css';
 import checkAnswer from '@/utils/AnswerHandling';
 import generateAnswer from '@/utils/GenerateAnswer';
+import {Util} from "@/utils/Util.js";  
+import {PHASER_MIN_DEPTH} from "@/utils/effectProps.js"
 import RadioButton from './RadioButton.vue';
 import eventManager from '@/utils/EventManager';
 
@@ -62,7 +64,8 @@ export default {
     // set up LFO. should osc between 0 and 1
     this.lfo = new OscillatorNode(this.context);
     // this.lfo.type = this.lfoType;
-    this.depthNode = new GainNode(this.context);
+    this.depth = PHASER_MIN_DEPTH;
+    this.depthNode = new GainNode(this.context, { gain: this.depth});
     this.depthNode.gain.setValueAtTime(this.depth, this.context.currentTime);
     //controls speed the notches and peaks move. det. how quickly modulation occurs. 
     this.lfo.frequency.value = this.rate;
@@ -85,7 +88,7 @@ export default {
     this.feedbackNode.gain.value = this.feedbackGain;
 
     // used for muting audio 
-    this.wetGainNode = new GainNode(this.context);
+    this.wetGainNode = new GainNode(this.context, { gain: 0.0 }); // default to wet 0%
     this.wetGainNode.gain.value = this.wetDryVal;
 
     this.bufferSource.connect(this.allPassFilters[0]);
@@ -106,7 +109,8 @@ export default {
     eventManager.off('pause-audio', this.pauseAudio); // unlisten
   },
   methods: {
-    startAudioContext() {
+    startAudioContext() { 
+      console.log("depth: ", this.depth);
       if (this.context === null) {
         console.log("initialized context");
         this.context = new (window.AudioContext || window.webkitAudioContext)();
@@ -251,7 +255,11 @@ export default {
                 // "\ndelayTime Ans: ", (this.ansDelayTimeVal*1000), 
                 "\nfdbk gain Ans: ", this.ansFeedbackGain,
                 "\nwetdry Ans: ", this.ansWetDryVal);
-    }
+    },
+    // due to Vue templating, cannot directly call Util.lintodb
+    formatToDb(value) {
+      return Math.round(Util.lintodb(Number(value)));
+    } 
   },
 };
 
@@ -302,6 +310,7 @@ export default {
         max="10"
         step="0.1"
         value="0.0"
+        numTicks="20"
         :defaultVal="this.rate"
         @input="rateUpdate"
         v-model="this.rate" 
@@ -316,9 +325,8 @@ export default {
       <horizontal-slider
         min="100"
         max="500"
-        step="10"
-        value="0.0"
-        :defaultVal="this.depth"
+        step="50"
+        value="100"
         @input="depthUpdate" 
         v-model="this.depth" 
         id="depth"
@@ -331,17 +339,20 @@ export default {
       <br>
       <!-- :defaultVal="feedbackVal" -->
       <horizontal-slider
-        min="0.0"
-        max="0.9"
+        min="0"
+        max="1"
         step="0.1"
-        value="feedbackGain"
+        value="0"
+        tickIncrement="5"
+        valueReadOnly=""
+        dbconvertValue=""
         defaultVal="feedbackGain"
         @input="feedbackUpdate" 
         v-model="this.feedbackGain" 
         id="feedback"
         name="feedback"
       ></horizontal-slider>
-      <p>Feedback Gain: {{ (this.feedbackGain) }}</p>
+      <p>Feedback Gain: {{ formatToDb(this.feedbackGain) }} dB</p>
       <br>
       <!-- <input type="range" @input="wetDryUpdate" v-model="this.wetDryVal" id="wetDryMix"
       name="wet/dry mix" min="0.0" max="1.0" step="0.1" class="efx-slider" >
@@ -353,12 +364,13 @@ export default {
         value="0.0"
         displayMult="100"
         tickIncrement="10"
+        valueReadOnly=""
         @input="wetDryUpdate" 
         v-model="this.wetDryVal" 
         id="wetDryMix"
         name="Wet/Dry Mix"
       ></horizontal-slider>
-      <p>Dry/Wet Mix {{ (this.wetDryVal)*100 }}%</p>
+      <p>Dry/Wet Mix {{ (this.wetDryVal*100) }}%</p>
       <br>
       <button @click="checkAnswer" type="button" class="text-t-color 
     bg-dark-green hover:bg-light-green focus:outline-none focus:ring-4 focus:ring-lighter-green
