@@ -2,7 +2,7 @@
 
 import '../assets/tailwind.css';
 import checkAnswer from '@/utils/AnswerHandling';
-import generateAnswer from '@/utils/GenerateAnswer';
+import {Ans} from '@/utils/GenerateAnswer';
 import {Util} from "@/utils/Util.js";  
 import RadioButton from './RadioButton.vue';
 import {ECHO_MIN_DELAY, ECHO_MAX_DELAY, ECHO_FEEDBACK} from '@/utils/effectProps.js';
@@ -93,9 +93,9 @@ export default {
     depth.gain.value = 0.004;
     
     // now randomly generating the answer 
-    this.ansDelayTimeVal = generateAnswer(ECHO_MIN_DELAY, ECHO_MAX_DELAY);
-    this.ansFeedbackGain = generateAnswer(0,ECHO_FEEDBACK);
-    this.ansWetDryVal = generateAnswer(0.0,1.0);
+    this.ansDelayTimeVal = Number(Ans.generateAnswer(ECHO_MIN_DELAY, ECHO_MAX_DELAY, 50)).toFixed();
+    this.ansFeedbackGain = Math.random().toFixed(2);
+    this.ansWetDryVal = Ans.generatePercentAnswer(0,1);
     console.log(
                 "delayTime Ans: ", this.ansDelayTimeVal,
                 "\nfdbk gain Ans: ", this.ansFeedbackGain,
@@ -235,9 +235,9 @@ export default {
       this.showScore = false; // hide the old answer if creating new answer now
       this.resetSliders(event);
       this.exerciseNum++;
-      this.ansDelayTimeVal = generateAnswer(ECHO_MIN_DELAY, ECHO_MAX_DELAY);
-      this.ansFeedbackGain = generateAnswer(0, ECHO_FEEDBACK);
-      this.ansWetDryVal = generateAnswer(0.0,1.0);
+      this.ansDelayTimeVal = Number(Ans.generateAnswer(ECHO_MIN_DELAY, ECHO_MAX_DELAY, 50)).toFixed();
+      this.ansFeedbackGain = Math.random().toFixed(2);
+      this.ansWetDryVal = Ans.generatePercentAnswer(0, 1);
       console.log("new answer:",
                 "\ndelayTime Ans: ", this.ansDelayTimeVal, 
                 "\nfdbk gain Ans: ", this.ansFeedbackGain,
@@ -375,7 +375,7 @@ export default {
       <br><br>
       <p v-if="showScore"><b>Delay Duration:</b> {{ this.delayScore }}, expected: {{this.ansDelayTimeVal}} ms</p>
       <p v-if="showScore"><b>Feedback Gain:</b> {{ this.fdbkScore }}, expected: {{formatToDb(this.ansFeedbackGain)}} dB</p>
-      <p v-if="showScore"><b>Dry/Wet Mix:</b> {{ this.wetDryScore }}, expected: {{this.ansWetDryVal}}</p>
+      <p v-if="showScore"><b>Dry/Wet Mix:</b> {{ this.wetDryScore }}, expected: {{(this.ansWetDryVal)*100}}%</p>
       <br class="vert-space">
       <p v-if="showScore"><b>Overall Score:</b> {{ this.score }} %</p>
     </div>
