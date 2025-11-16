@@ -113,7 +113,8 @@ export default {
     this.ansRate = Number(Ans.generateAnswer(0,10)).toFixed();
     console.log(PHASER_MIN_DEPTH,PHASER_MAX_DEPTH);
     this.ansDepth = Number(Ans.generateAnswer(PHASER_MIN_DEPTH,PHASER_MAX_DEPTH, 50)).toFixed();
-    this.ansFeedbackGain = Math.random().toFixed(2);
+    // TODO for now: limit feedback
+    this.ansFeedbackGain = Math.random() * 0.7;
     this.ansWetDryVal = Ans.generatePercentAnswer(0, 1);
       console.log("new answer:",
                 "\nrate Ans: ", this.ansRate, 
@@ -266,7 +267,8 @@ export default {
       this.exerciseNum++;
       this.ansRate = Number(Ans.generateAnswer(0,10)).toFixed();
       this.ansDepth = Number(Ans.generateAnswer(PHASER_MIN_DEPTH,PHASER_MAX_DEPTH, 50)).toFixed();
-      this.ansFeedbackGain = Math.random().toFixed(2);
+      // TODO for now: limit feedback
+      this.ansFeedbackGain = Math.random() * 0.7;
       this.ansWetDryVal = Ans.generatePercentAnswer(0, 1);
       console.log("new answer:",
                 "\nrate Ans: ",  this.ansRate, 
