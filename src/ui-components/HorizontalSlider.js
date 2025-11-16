@@ -57,7 +57,7 @@ export class HorizontalSlider extends HTMLElement {
     style.textContent = `
       @media only screen and (max-width: 600px)  {
         .hori-slider-container {
-          max-width:70%;
+          max-width:80%;
         }
       }
       .hori-slider-container {
@@ -306,7 +306,7 @@ export class HorizontalSlider extends HTMLElement {
     if (this._dbconvertValue) {
       this._valueInput.value = Util.lintodb(value).toFixed();
     } else if (this._displayMult) {
-      this._valueInput.value = (this._valueInput.value * 100).toFixed();
+      this._valueInput.value = (this._value * 100).toFixed();
     } else {
       this._valueInput.value = this._value;
     }
