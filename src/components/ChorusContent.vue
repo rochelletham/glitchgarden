@@ -83,7 +83,7 @@ export default {
     this.feedbackGain = 0.0;
     this.lfo.frequency.value = 0.1;
     this.delayTimeVal = CHORUS_MIN_DELAY; 
-    this.delayNode.delayTime.value = this.delayTimeVal;
+    this.delayNode.delayTime.value = this.delayTimeVal/1000;
     this.feedbackNode.gain.value = this.feedbackGain;
     depth.gain.value = 0.004;
     

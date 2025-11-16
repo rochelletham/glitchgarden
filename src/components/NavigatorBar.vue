@@ -14,9 +14,9 @@
                         class="flex items-center w-auto text-light-green px-3 py-2 -ml-1 hover:text-t-color">Other Exercises</button>
                         <div v-show="isDropdownVisible" @mouseover="showDropdown" 
                                 class="absolute left-0 top-full pt-0 py-2 w-48 bg-secondary-bk rounded-md shadow-xl z-10">
-                            <router-link :to="{ path: '/', query: { component: 'FlangerContent' } }" class="block text-left text-light-green hover:bg-tertiary-bk px-3 py-2 rounded-md" @click.native="pageChange">Flanger</router-link>
-                            <router-link :to="{ path: '/', query: { component: 'EchoContent' } }" class="block text-left text-light-green hover:bg-gray-600 px-3 py-2 rounded-md" @click.native="pageChange">Echo</router-link>
                             <router-link :to="{ path: '/', query: { component: 'PhaserContent' } }" class="block text-left text-light-green hover:bg-tertiary-bk px-3 py-2 rounded-md" @click.native="pageChange">Phaser</router-link>
+                            <router-link :to="{ path: '/', query: { component: 'EchoContent' } }" class="block text-left text-light-green hover:bg-gray-600 px-3 py-2 rounded-md" @click.native="pageChange">Echo</router-link>
+                            <router-link :to="{ path: '/', query: { component: 'FlangerContent' } }" class="block text-left text-light-green hover:bg-tertiary-bk px-3 py-2 rounded-md" @click.native="pageChange">Flanger</router-link>
                             <router-link :to="{ path: '/', query: { component: 'ChorusContent' } }" class="block text-left text-light-green hover:bg-tertiary-bk px-3 py-2 rounded-md" @click.native="pageChange">Chorus</router-link>
                             <router-link :to="{ path: '/', query: { component: 'DoublingContent' } }" class="block text-left text-light-green hover:bg-gray-600 px-3 py-2 rounded-md" @click.native="pageChange">Doubling</router-link>
                             <!-- <router-link :to="{ path: '/', query: { component: 'StereoDelayContent' } }" class="block text-left text-light-green hover:bg-gray-600 px-3 py-2 rounded-md" @click.native="pageChange">Stereo Delay</router-link> -->

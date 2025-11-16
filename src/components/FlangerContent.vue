@@ -81,15 +81,17 @@ export default {
 
     this.feedbackGain = 0.0;
     this.lfo.frequency.value = 0.1;
+    // careful with units! need to convert to sec if working with audio nodes
     this.delayTimeVal = FLANGER_MIN_DELAY;
-    this.delayNode.delayTime.value = this.delayTimeVal;
+    this.delayNode.delayTime.value = this.delayTimeVal/1000;
     this.feedbackNode.gain.value = this.feedbackGain;
     depth.gain.value = 0.004;
     
     // now randomly generating the answer 
     this.ansDelayTimeVal = Number(Ans.generateAnswer(FLANGER_MIN_DELAY, FLANGER_MAX_DELAY)).toFixed();
     this.ansFeedbackGain = Math.random().toFixed(2);
-    this.ansWetDryVal = Ans.generatePercentAnswer(0,1);
+    // TODO: temp fix against too much feedback/gain
+    this.ansWetDryVal = Ans.generatePercentAnswer(0,7);
     console.log(
                 "delayTime Ans: ", this.ansDelayTimeVal,
                 "\nfdbk gain Ans: ", this.ansFeedbackGain,
@@ -226,7 +228,7 @@ export default {
         this.dryGainNode.gain.setValueAtTime(1.0 - this.wetDryVal, this.context.currentTime);
         this.wetGainNode.gain.setValueAtTime(this.wetDryVal, this.context.currentTime);
       } else {
-        this.delayNode.delayTime.setValueAtTime(this.ansDelayTimeVal, this.context.currentTime);
+        this.delayNode.delayTime.setValueAtTime(this.ansDelayTimeVal/1000, this.context.currentTime);
         this.feedbackNode.gain.setValueAtTime(this.ansFeedbackGain, this.context.currentTime);
         this.dryGainNode.gain.setValueAtTime(1.0 - this.ansWetDryVal, this.context.currentTime);
         this.wetGainNode.gain.setValueAtTime(this.ansWetDryVal, this.context.currentTime);
@@ -242,7 +244,8 @@ export default {
       this.exerciseNum++;
       this.ansDelayTimeVal = Number(Ans.generateAnswer(FLANGER_MIN_DELAY, FLANGER_MAX_DELAY)).toFixed();
       this.ansFeedbackGain = Math.random().toFixed(2);
-      this.ansWetDryVal = Ans.generatePercentAnswer(0,1);
+      // TODO: temp fix against too much feedback/gain
+      this.ansWetDryVal = Ans.generatePercentAnswer(0,7);
       console.log("new answer:",
                 "\ndelayTime Ans: ", (this.ansDelayTimeVal*1000), 
                 "\nfdbk gain Ans: ", this.ansFeedbackGain,
