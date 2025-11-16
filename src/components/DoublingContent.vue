@@ -2,7 +2,7 @@
 
 import '../assets/tailwind.css';
 import checkAnswer from '@/utils/AnswerHandling';
-import generateAnswer from '@/utils/GenerateAnswer';
+import {Ans} from '@/utils/GenerateAnswer';
 import RadioButton from './RadioButton.vue';
 import {Util} from "@/utils/Util.js"; 
 import {DOUBLING_MIN_DELAY, DOUBLING_MAX_DELAY, DOUBLING_FEEDBACK} from '@/utils/effectProps.js';
@@ -85,14 +85,14 @@ export default {
     this.lfo.frequency.value = 0.1;
     // in ms. when setting delayNode, be sure to convert back to seconds
     this.delayTimeVal = DOUBLING_MIN_DELAY;
-    this.delayNode.delayTime.value = this.delayTimeVal;
+    this.delayNode.delayTime.value = this.delayTimeVal / 1000;
     this.feedbackNode.gain.value = this.feedbackGain;
     depth.gain.value = 0.004;
     
     // now randomly generating the answer 
-    this.ansDelayTimeVal = generateAnswer(DOUBLING_MIN_DELAY, DOUBLING_MAX_DELAY);
-    this.ansFeedbackGain = generateAnswer(0.0,DOUBLING_FEEDBACK);
-    this.ansWetDryVal = generateAnswer(0.0,1.0);
+    this.ansDelayTimeVal = Number(Ans.generateAnswer(DOUBLING_MIN_DELAY, DOUBLING_MAX_DELAY, 10)).toFixed();
+    this.ansFeedbackGain = Math.random().toFixed(2);
+    this.ansWetDryVal = Ans.generatePercentAnswer(0,1);
     console.log(
                 "delayTime Ans: ", (this.ansDelayTimeVal*1000),
                 "\nfdbk gain Ans: ", this.ansFeedbackGain,
@@ -205,12 +205,12 @@ export default {
       this.yoursActive = !this.yoursActive;
       // TODO: modularize & fix this code -- right now very crude
       if (this.yoursActive) {
-        this.delayNode.delayTime.setValueAtTime(this.delayTimeVal, this.context.currentTime);
+        this.delayNode.delayTime.setValueAtTime(this.delayTimeVal / 1000, this.context.currentTime);
         this.feedbackNode.gain.setValueAtTime(this.feedbackGain, this.context.currentTime);
         this.dryGainNode.gain.setValueAtTime(1.0 - this.wetDryVal, this.context.currentTime);
         this.wetGainNode.gain.setValueAtTime(this.wetDryVal, this.context.currentTime);
       } else {
-        this.delayNode.delayTime.setValueAtTime(this.ansDelayTimeVal, this.context.currentTime);
+        this.delayNode.delayTime.setValueAtTime(this.ansDelayTimeVal/1000, this.context.currentTime);
         this.feedbackNode.gain.setValueAtTime(this.ansFeedbackGain, this.context.currentTime);
         this.dryGainNode.gain.setValueAtTime(1.0 - this.ansWetDryVal, this.context.currentTime);
         this.wetGainNode.gain.setValueAtTime(this.ansWetDryVal, this.context.currentTime);
@@ -223,9 +223,9 @@ export default {
       this.showScore = false; // hide the old answer if creating new answer now
       this.resetSliders(event);
       this.exerciseNum++;
-      this.ansDelayTimeVal = generateAnswer(DOUBLING_MIN_DELAY, DOUBLING_MAX_DELAY);
-      this.ansFeedbackGain = generateAnswer(0, DOUBLING_FEEDBACK);
-      this.ansWetDryVal = generateAnswer(0.0,1.0);
+      this.ansDelayTimeVal = Number(Ans.generateAnswer(DOUBLING_MIN_DELAY, DOUBLING_MAX_DELAY, 10)).toFixed();
+    this.ansFeedbackGain = Math.random().toFixed(2);
+    this.ansWetDryVal = Ans.generatePercentAnswer(0,1);
       console.log("new answer:",
                 "\ndelayTime Ans: ", (this.ansDelayTimeVal*1000), 
                 "\nfdbk gain Ans: ", this.ansFeedbackGain,
@@ -285,7 +285,7 @@ export default {
         :min="DOUBLING_MIN_DELAY"
         :max="DOUBLING_MAX_DELAY"
         step="10"
-        numTicks="20"
+        numTicks="8"
         value="0.0"
         valueReadOnly=""
         @input="delayTimeUpdate"

@@ -202,14 +202,14 @@ export default {
       // *1000 because in milliseconds
       [this.delayScore, this.fdbkScore, this.wetDryScore, this.score] = 
       checkAnswer("echo", (this.delayTimeVal), this.feedbackGain, this.wetDryVal,
-                  (this.ansDelayTimeVal), this.ansFeedbackGain, this.ansWetDryVal, this.rate, this.depth, this.ansRate, this.ansDepth);  
+                  (this.ansDelayTimeVal), this.ansFeedbackGain, this.ansWetDryVal);  
       this.showScore = true;
     },
     switchAudioMode(event) {
       this.yoursActive = !this.yoursActive;
       this.context.suspend();
       if (this.yoursActive) {
-        this.delayNode.delayTime.setValueAtTime(this.delayTimeVal, this.context.currentTime);
+        this.delayNode.delayTime.setValueAtTime(this.delayTimeVal / 1000, this.context.currentTime);
         this.feedbackNode.gain.setValueAtTime(this.feedbackGain, this.context.currentTime);
         this.dryGainNode.gain.setValueAtTime(1.0 - this.wetDryVal, this.context.currentTime);
         this.wetGainNode.gain.setValueAtTime(this.wetDryVal, this.context.currentTime);

@@ -3,7 +3,7 @@
         <router-link :to="{ path: '/', query: { component: 'EchoContent' } }" 
             class="absolute left-4 top-3 flex items-center gap-3 w-auto h-12 hover:opacity-75 text-2xl text-light-green font-semibold hover:text-opacity-75" @click.native="pageChange">
             <img src="../svgs/sproutlogo.gif" class="w-15 h-7 object-contain">
-                glitch garden
+                <p class="hidden sm:block ">glitch garden</p>
         </router-link>
         
             <div class="absolute right-4 top-3 z-50 flex text-t-color space-x-8 ml-auto hover:text-t-color ">
@@ -19,7 +19,7 @@
                             <router-link :to="{ path: '/', query: { component: 'PhaserContent' } }" class="block text-left text-light-green hover:bg-tertiary-bk px-3 py-2 rounded-md" @click.native="pageChange">Phaser</router-link>
                             <router-link :to="{ path: '/', query: { component: 'ChorusContent' } }" class="block text-left text-light-green hover:bg-tertiary-bk px-3 py-2 rounded-md" @click.native="pageChange">Chorus</router-link>
                             <router-link :to="{ path: '/', query: { component: 'DoublingContent' } }" class="block text-left text-light-green hover:bg-gray-600 px-3 py-2 rounded-md" @click.native="pageChange">Doubling</router-link>
-                            <router-link :to="{ path: '/', query: { component: 'StereoDelayContent' } }" class="block text-left text-light-green hover:bg-gray-600 px-3 py-2 rounded-md" @click.native="pageChange">Stereo Delay</router-link>
+                            <!-- <router-link :to="{ path: '/', query: { component: 'StereoDelayContent' } }" class="block text-left text-light-green hover:bg-gray-600 px-3 py-2 rounded-md" @click.native="pageChange">Stereo Delay</router-link> -->
                         </div>
                     </div>
                 </div>

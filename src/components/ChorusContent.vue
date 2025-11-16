@@ -2,7 +2,7 @@
 
 import '../assets/tailwind.css';
 import checkAnswer from '@/utils/AnswerHandling';
-import generateAnswer from '@/utils/GenerateAnswer';
+import {Ans} from '@/utils/GenerateAnswer';
 import {Util} from "@/utils/Util.js"; 
 import RadioButton from './RadioButton.vue';
 import {CHORUS_MIN_DELAY, CHORUS_MAX_DELAY, CHORUS_FEEDBACK} from '@/utils/effectProps.js';
@@ -88,11 +88,11 @@ export default {
     depth.gain.value = 0.004;
     
     // now randomly generating the answer 
-    this.ansDelayTimeVal = generateAnswer(CHORUS_MIN_DELAY, CHORUS_MAX_DELAY);
-    this.ansFeedbackGain = generateAnswer(0,CHORUS_FEEDBACK);
-    this.ansWetDryVal = generateAnswer(0.0,1.0);
+    this.ansDelayTimeVal = Number(Ans.generateAnswer(CHORUS_MIN_DELAY, CHORUS_MAX_DELAY, 1)).toFixed();
+    this.ansFeedbackGain = Math.random().toFixed(2);
+    this.ansWetDryVal = Ans.generatePercentAnswer(0,1);
     console.log(
-                "delayTime Ans: ", (this.ansDelayTimeVal*1000),
+                "delayTime Ans: ", this.ansDelayTimeVal,
                 "\nfdbk gain Ans: ", this.ansFeedbackGain,
                 "\nwetdry Ans: ", this.ansWetDryVal);
   },
@@ -202,12 +202,12 @@ export default {
       this.yoursActive = !this.yoursActive;
       // TODO: modularize & fix this code -- right now very crude
       if (this.yoursActive) {
-        this.delayNode.delayTime.setValueAtTime(this.delayTimeVal, this.context.currentTime);
+        this.delayNode.delayTime.setValueAtTime(this.delayTimeVal / 1000, this.context.currentTime);
         this.feedbackNode.gain.setValueAtTime(this.feedbackGain, this.context.currentTime);
         this.dryGainNode.gain.setValueAtTime(1.0 - this.wetDryVal, this.context.currentTime);
         this.wetGainNode.gain.setValueAtTime(this.wetDryVal, this.context.currentTime);
       } else {
-        this.delayNode.delayTime.setValueAtTime(this.ansDelayTimeVal, this.context.currentTime);
+        this.delayNode.delayTime.setValueAtTime(this.ansDelayTimeVal / 1000, this.context.currentTime);
         this.feedbackNode.gain.setValueAtTime(this.ansFeedbackGain, this.context.currentTime);
         this.dryGainNode.gain.setValueAtTime(1.0 - this.ansWetDryVal, this.context.currentTime);
         this.wetGainNode.gain.setValueAtTime(this.ansWetDryVal, this.context.currentTime);
@@ -221,9 +221,9 @@ export default {
     generateAnswer(event) {
       this.showScore = false; // hide the old answer if creating new answer now
       this.exerciseNum++;
-      this.ansDelayTimeVal = generateAnswer(0,1.0);
-      this.ansFeedbackGain = generateAnswer(0, 1.0);
-      this.ansWetDryVal = generateAnswer(0.0,1.0);
+      this.ansDelayTimeVal = Number(Ans.generateAnswer(CHORUS_MIN_DELAY, CHORUS_MAX_DELAY, 1)).toFixed();
+      this.ansFeedbackGain = Math.random().toFixed(2);
+      this.ansWetDryVal = Ans.generatePercentAnswer(0, 1);
       console.log("new answer:",
                 "\ndelayTime Ans: ", (this.ansDelayTimeVal*1000), 
                 "\nfdbk gain Ans: ", this.ansFeedbackGain,
@@ -360,7 +360,7 @@ export default {
       <br><br>
       <p v-if="showScore"><b>Delay Duration:</b> {{ this.delayScore }}, expected: {{this.ansDelayTimeVal}} ms</p>
       <p v-if="showScore"><b>Feedback Gain:</b> {{ this.fdbkScore }}, expected: {{this.ansFeedbackGain}} dB</p>
-      <p v-if="showScore"><b>Dry/Wet Mix:</b> {{ this.wetDryScore }}, expected: {{this.ansWetDryVal}}</p>
+      <p v-if="showScore"><b>Dry/Wet Mix:</b> {{ this.wetDryScore }}, expected: {{this.ansWetDryVal*100}}%</p>
       <br class="vert-space">
       <p v-if="showScore"><b>Overall Score:</b> {{ this.score }} %</p>
     </div>

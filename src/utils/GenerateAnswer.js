@@ -13,7 +13,7 @@ export const Ans = {
      */
     generateAnswer : (min, max, divNum=1) => {
         const randNum = Math.random();
-        const ans = Math.floor(randNum * (Math.floor(max/divNum) - Math.ceil(min/divNum))) + min;
+        const ans = Math.floor(randNum * (Math.floor(max/divNum) - Math.ceil(min/divNum) + 1)) + Math.ceil(min/divNum);
         // console.log(randNum, min, max, divNum, ans)
         return (ans * divNum).toFixed(2);
     },

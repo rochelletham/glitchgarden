@@ -270,22 +270,22 @@ export default {
       this.yoursActive = !this.yoursActive;
       // TODO: modularize & fix this code -- right now very crude
       if (this.yoursActive) {
-        this.delayNodeLeft.delayTime.setValueAtTime(this.delayTimeValLeft, this.context.currentTime);
+        this.delayNodeLeft.delayTime.setValueAtTime(this.delayTimeValLeft / 1000, this.context.currentTime);
         this.feedbackNodeLeft.gain.setValueAtTime(this.feedbackGainLeft, this.context.currentTime);
         this.dryGainNodeLeft.gain.setValueAtTime(1.0 - this.wetDryValLeft, this.context.currentTime);
         this.wetGainNodeLeft.gain.setValueAtTime(this.wetDryValLeft, this.context.currentTime);
 
-        this.delayNodeRt.delayTime.setValueAtTime(this.delayTimeValRt, this.context.currentTime);
+        this.delayNodeRt.delayTime.setValueAtTime(this.delayTimeValRt / 1000, this.context.currentTime);
         this.feedbackNodeRt.gain.setValueAtTime(this.feedbackGainRt, this.context.currentTime);
         this.dryGainNodeRt.gain.setValueAtTime(1.0 - this.wetDryValRt, this.context.currentTime);
         this.wetGainNodeRt.gain.setValueAtTime(this.wetDryValRt, this.context.currentTime);
       } else {
-        this.delayNodeLeft.delayTime.setValueAtTime(this.ansDelayTimeValLeft, this.context.currentTime);
+        this.delayNodeLeft.delayTime.setValueAtTime(this.ansDelayTimeValLeft / 1000, this.context.currentTime);
         this.feedbackNodeLeft.gain.setValueAtTime(this.ansFeedbackGainLeft, this.context.currentTime);
         this.dryGainNodeLeft.gain.setValueAtTime(1.0 - this.ansWetDryValLeft, this.context.currentTime);
         this.wetGainNodeLeft.gain.setValueAtTime(this.ansWetDryValLeft, this.context.currentTime);
         
-        this.delayNodeRt.delayTime.setValueAtTime(this.ansDelayTimeValRt, this.context.currentTime);
+        this.delayNodeRt.delayTime.setValueAtTime(this.ansDelayTimeValRt / 1000, this.context.currentTime);
         this.feedbackNodeRt.gain.setValueAtTime(this.ansFeedbackGainRt, this.context.currentTime);
         this.dryGainNodeRt.gain.setValueAtTime(1.0 - this.ansWetDryValRt, this.context.currentTime);
         this.wetGainNodeRt.gain.setValueAtTime(this.ansWetDryValRt, this.context.currentTime);

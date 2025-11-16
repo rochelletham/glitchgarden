@@ -2,10 +2,12 @@
 
 import '../assets/tailwind.css';
 import checkAnswer from '@/utils/AnswerHandling';
+import {Ans} from '@/utils/GenerateAnswer';
 import generateAnswer from '@/utils/GenerateAnswer';
 import {Util} from "@/utils/Util.js";  
-import {PHASER_MIN_DEPTH} from "@/utils/effectProps.js"
+import {PHASER_MIN_DEPTH, PHASER_MAX_DEPTH} from "@/utils/effectProps.js"
 import RadioButton from './RadioButton.vue';
+import { HorizontalSlider } from '@/ui-components/HorizontalSlider.js';
 import eventManager from '@/utils/EventManager';
 
 export default {
@@ -50,7 +52,9 @@ export default {
       ansDepth: 0,
       ansWetDryVal: 0.5,  
       exerciseNum: 1,
-      showAudio: false
+      showAudio: false,
+      PHASER_MAX_DEPTH: PHASER_MIN_DEPTH,
+      PHASER_MAX_DEPTH: PHASER_MAX_DEPTH
     };
   },
   mounted() {
@@ -104,6 +108,18 @@ export default {
     this.dryGainNode.gain.value = 1.0;    // default to dry 100%
     this.bufferSource.connect(this.dryGainNode).connect(this.context.destination);
     //***** DONT TOUCH -- FOR DRY AUDIO *****// 
+
+    // now randomly generating the answer 
+    this.ansRate = Number(Ans.generateAnswer(0,10)).toFixed();
+    console.log(PHASER_MIN_DEPTH,PHASER_MAX_DEPTH);
+    this.ansDepth = Number(Ans.generateAnswer(PHASER_MIN_DEPTH,PHASER_MAX_DEPTH, 50)).toFixed();
+    this.ansFeedbackGain = Math.random().toFixed(2);
+    this.ansWetDryVal = Ans.generatePercentAnswer(0, 1);
+      console.log("new answer:",
+                "\nrate Ans: ", this.ansRate, 
+                "\ndepth Ans: ", this.ansDepth, 
+                "\nfdbk gain Ans: ", this.ansFeedbackGain,
+                "\nwetdry Ans: ", this.ansWetDryVal);
   },
   beforeUnmount() {
     eventManager.off('pause-audio', this.pauseAudio); // unlisten
@@ -229,9 +245,13 @@ export default {
       this.toggleMode = !this.toggleMode;   // toggleMode = false --> yoursActive = true
       this.yoursActive = !this.yoursActive;
       if (this.yoursActive) {
+        this.lfo.frequency.setValueAtTime(this.rate, this.context.currentTime);
+        this.feedbackNode.gain.setValueAtTime(this.feedbackGain, this.context.currentTime);
         this.dryGainNode.gain.setValueAtTime(1.0 - this.wetDryVal, this.context.currentTime);
         this.wetGainNode.gain.setValueAtTime(this.wetDryVal, this.context.currentTime);
       } else {
+        this.lfo.frequency.setValueAtTime(this.ansRate, this.context.currentTime);
+        this.feedbackNode.gain.setValueAtTime(this.ansFeedbackGain, this.context.currentTime);
         this.dryGainNode.gain.setValueAtTime(1.0 - this.ansWetDryVal, this.context.currentTime);
         this.wetGainNode.gain.setValueAtTime(this.ansWetDryVal, this.context.currentTime);
       }
@@ -244,15 +264,13 @@ export default {
     generateAnswer(event) {
       this.showScore = false; // hide the old answer if creating new answer now
       this.exerciseNum++;
-      this.ansRate = generateAnswer(0.5,10);
-      this.ansDepth = generateAnswer(0.5,500);
-      // this.ansDelayTimeVal = generateAnswer(0,1);
-      this.ansFeedbackGain = generateAnswer(0, 1.0);
-      this.ansWetDryVal = generateAnswer(0.0,1.0);
+      this.ansRate = Number(Ans.generateAnswer(0,10)).toFixed();
+      this.ansDepth = Number(Ans.generateAnswer(PHASER_MIN_DEPTH,PHASER_MAX_DEPTH, 50)).toFixed();
+      this.ansFeedbackGain = Math.random().toFixed(2);
+      this.ansWetDryVal = Ans.generatePercentAnswer(0, 1);
       console.log("new answer:",
                 "\nrate Ans: ",  this.ansRate, 
                 "\ndepth Ans: ", this.ansDepth,
-                // "\ndelayTime Ans: ", (this.ansDelayTimeVal*1000), 
                 "\nfdbk gain Ans: ", this.ansFeedbackGain,
                 "\nwetdry Ans: ", this.ansWetDryVal);
     },
@@ -383,8 +401,8 @@ export default {
       <br><br>
       <p v-if="showScore"><b>LFO Rate:</b> {{ this.rateScore }}, expected: {{ this.ansRate }}</p>
       <p v-if="showScore"><b>LFO Depth:</b> {{ this.depthScore }}, expected: {{ this.ansDepth }} Hz</p>
-      <p v-if="showScore"><b>Feedback Gain:</b> {{ this.fdbkScore }}, expected: {{this.ansFeedbackGain}} dB</p>
-      <p v-if="showScore"><b>Dry/Wet Mix:</b> {{ this.wetDryScore }}, expected: {{this.ansWetDryVal}}</p>
+      <p v-if="showScore"><b>Feedback Gain:</b> {{ this.fdbkScore }}, expected: {{formatToDb(this.ansFeedbackGain)}} dB</p>
+      <p v-if="showScore"><b>Dry/Wet Mix:</b> {{ this.wetDryScore }}, expected: {{this.ansWetDryVal*100}}%</p>
       <br class="vert-space">
       <p v-if="showScore"><b>Overall Score:</b> {{ this.score }} %</p>
     </div>

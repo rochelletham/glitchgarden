@@ -24,8 +24,8 @@ const scoreText = (state) => {
 const checkAnswer = (type, userDelayDur, userFdbkGain, userWetDryVal, ansDelayDur, ansFdbkGain, ansWetDryVal, userRate=0, userDepth=0, ansRate=0, ansDepth=0
                     ) => {
     console.log("current answers: ", 
-        "\nLFO Rate Ans: ", ansRate, 
-        "\nLFO Depth Ans: ", ansDepth, 
+        "\nif have LFO: LFO Rate Ans: ", ansRate, 
+        "\nif have LFO: LFO Depth Ans: ", ansDepth, 
         "\ndelayTime Ans: ", ansDelayDur, 
         "\nfdbk gain Ans: ", ansFdbkGain,
         "\nwetdry Ans: ", ansWetDryVal);
