@@ -1,11 +1,9 @@
 <template>
     <nav class="p-9 w-full fixed top-0 pl-5">
         <router-link :to="{ path: '/', query: { component: 'EchoContent' } }" 
-            class="absolute left-4 top-3 flex items-center gap-3 w-auto h-12 hover:opacity-75" @click.native="pageChange">
+            class="absolute left-4 top-3 flex items-center gap-3 w-auto h-12 hover:opacity-75 text-2xl text-light-green font-semibold hover:text-opacity-75" @click.native="pageChange">
             <img src="../svgs/sproutlogo.gif" class="w-15 h-7 object-contain">
-            <router-link :to="{ path: '/', query: { component: 'EchoContent' } }" @click.native="pageChange"
-                class="-ml-3 text-2xl text-light-green font-semibold hover:text-opacity-75">glitch garden
-            </router-link> 
+                glitch garden
         </router-link>
         
             <div class="absolute right-4 top-3 z-50 flex text-t-color space-x-8 ml-auto hover:text-t-color ">
