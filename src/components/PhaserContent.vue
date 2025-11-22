@@ -111,11 +111,10 @@ export default {
 
     // now randomly generating the answer 
     this.ansRate = Number(Ans.generateAnswer(0,10)).toFixed();
-    console.log(PHASER_MIN_DEPTH,PHASER_MAX_DEPTH);
     this.ansDepth = Number(Ans.generateAnswer(PHASER_MIN_DEPTH,PHASER_MAX_DEPTH, 50)).toFixed();
     // TODO for now: limit feedback
     this.ansFeedbackGain = Math.random() * 0.7;
-    this.ansWetDryVal = Ans.generatePercentAnswer(0, 1);
+    this.ansWetDryVal = Ans.generatePercentAnswer(0.1, 1);
       console.log("new answer:",
                 "\nrate Ans: ", this.ansRate, 
                 "\ndepth Ans: ", this.ansDepth, 
@@ -337,7 +336,7 @@ export default {
         id="rate"
         name="rate"
       ></horizontal-slider>
-      <p>Rate: {{ (this.rate) }}</p>
+      <p>LFO Rate: {{ (this.rate) }}</p>
       <br>
       <!-- <input type="range" @input="depthUpdate" v-model="this.depth" id="depth"
       name="rate" min="100" max="500" step="10" class="efx-slider" >
@@ -352,7 +351,7 @@ export default {
         id="depth"
         name="depth"
       ></horizontal-slider>
-      <p>Depth: {{ (this.depth) }} Hz</p>
+      <p>LFO Depth: {{ (this.depth) }} Hz</p>
       <!-- <input type="range" @input="feedbackUpdate" v-model="this.feedbackVal" id="feedback"
       name="feedback" min="0.0" max="0.9" step="0.1" class="efx-slider" >
       <p>feedback {{ this.feedbackVal }}</p> -->

@@ -91,8 +91,10 @@ export default {
     
     // now randomly generating the answer 
     this.ansDelayTimeVal = Number(Ans.generateAnswer(DOUBLING_MIN_DELAY, DOUBLING_MAX_DELAY, 10)).toFixed();
-    this.ansFeedbackGain = Math.random().toFixed(2);
-    this.ansWetDryVal = Ans.generatePercentAnswer(0,1);
+    // this.ansFeedbackGain = Math.random().toFixed(2);
+    // TODO for now: limit feedback
+    this.ansFeedbackGain = (Math.random() * 0.7).toFixed(2);
+    this.ansWetDryVal = Ans.generatePercentAnswer(0.1, 1);
     console.log(
                 "delayTime Ans: ", (this.ansDelayTimeVal*1000),
                 "\nfdbk gain Ans: ", this.ansFeedbackGain,
@@ -225,7 +227,7 @@ export default {
       this.exerciseNum++;
       this.ansDelayTimeVal = Number(Ans.generateAnswer(DOUBLING_MIN_DELAY, DOUBLING_MAX_DELAY, 10)).toFixed();
     this.ansFeedbackGain = Math.random().toFixed(2);
-    this.ansWetDryVal = Ans.generatePercentAnswer(0,1);
+    this.ansWetDryVal = Ans.generatePercentAnswer(0.1, 1);
       console.log("new answer:",
                 "\ndelayTime Ans: ", (this.ansDelayTimeVal*1000), 
                 "\nfdbk gain Ans: ", this.ansFeedbackGain,

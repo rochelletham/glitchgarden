@@ -115,13 +115,13 @@ export default {
     
     
     // now randomly generating the answer 
-    this.ansDelayTimeValLeft = generateAnswer(0,1.0);
-    this.ansFeedbackGainLeft = generateAnswer(0,0.6);
-    this.ansWetDryValLeft = generateAnswer(0.0,1.0);
+    this.ansDelayTimeValLeft = generateAnswer(0, 1.0);
+    this.ansFeedbackGainLeft = generateAnswer(0, 0.6);
+    this.ansWetDryValLeft = generateAnswer(0.1 ,1.0);
 
-    this.ansDelayTimeValRt = generateAnswer(0,1.0);
-    this.ansFeedbackGainRt = generateAnswer(0,0.6);
-    this.ansWetDryValRt = generateAnswer(0.0,1.0);
+    this.ansDelayTimeValRt = generateAnswer(0, 1.0);
+    this.ansFeedbackGainRt = generateAnswer(0, 0.6);
+    this.ansWetDryValRt = generateAnswer(0.1, 1.0);
     console.log(
                 "delayTime Left Ans: ", (this.ansDelayTimeValLeft*1000),
                 "\nfdbk gain Left Ans: ", this.ansFeedbackGainLeft,

@@ -18,6 +18,12 @@ export const Ans = {
         return (ans * divNum).toFixed(2);
     },
 
+    /**
+     * Generates a random percentage at or above .1
+     *
+     * @param {number} min of the range
+     * @param {number} max of the range
+     */
     generatePercentAnswer : (min, max, divNum=10) => {
         return Math.floor(Math.random() * 11.0) / divNum;
     },

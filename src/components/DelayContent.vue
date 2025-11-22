@@ -72,9 +72,9 @@ export default {
     this.passGainNode.connect(this.context.destination);
 
     // now randomly generating the answer 
-    this.ansDelayTimeVal = generateAnswer(0,1.0);
-    this.ansFeedbackGain = generateAnswer(0,0.6);
-    this.ansWetDryVal = generateAnswer(0.0,1.0);
+    this.ansDelayTimeVal = generateAnswer(0, 1.0);
+    this.ansFeedbackGain = generateAnswer(0, 0.7);
+    this.ansWetDryVal = generateAnswer(0.1, 1.0);
     console.log("delayTime Ans: ", (this.ansDelayTimeVal*1000),
                 "\nfdbk gain Ans: ", this.ansFeedbackGain,
                 "\nwetdry Ans: ", this.ansWetDryVal);
@@ -165,9 +165,9 @@ export default {
     generateAnswer(event) {
       this.showScore = false; // hide the old answer if creating new answer now
       this.exerciseNum++;
-      this.ansDelayTimeVal = generateAnswer(0,1.0);
-      this.ansFeedbackGain = generateAnswer(0,0.6);
-      this.ansWetDryVal = generateAnswer(0.0,1.0);
+      this.ansDelayTimeVal = generateAnswer(0, 1.0);
+      this.ansFeedbackGain = generateAnswer(0, 0.6);
+      this.ansWetDryVal = generateAnswer(0.1, 1.0);
       console.log("new answer:",
                 "\ndelayTime Ans: ", (this.ansDelayTimeVal*1000), 
                 "\nfdbk gain Ans: ", this.ansFeedbackGain,

@@ -243,9 +243,11 @@ export default {
       this.showScore = false; // hide the old answer if creating new answer now
       this.exerciseNum++;
       this.ansDelayTimeVal = Number(Ans.generateAnswer(FLANGER_MIN_DELAY, FLANGER_MAX_DELAY)).toFixed();
-      this.ansFeedbackGain = Math.random().toFixed(2);
+      // this.ansFeedbackGain = Math.random().toFixed(2);
+      // TODO for now: limit feedback
+      this.ansFeedbackGain = Math.random() * 0.7;
       // TODO: temp fix against too much feedback/gain
-      this.ansWetDryVal = Ans.generatePercentAnswer(0,7);
+      this.ansWetDryVal = Ans.generatePercentAnswer(0.1, 1);
       console.log("new answer:",
                 "\ndelayTime Ans: ", (this.ansDelayTimeVal*1000), 
                 "\nfdbk gain Ans: ", this.ansFeedbackGain,

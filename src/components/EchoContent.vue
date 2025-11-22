@@ -94,8 +94,10 @@ export default {
     
     // now randomly generating the answer 
     this.ansDelayTimeVal = Number(Ans.generateAnswer(ECHO_MIN_DELAY, ECHO_MAX_DELAY, 50)).toFixed();
-    this.ansFeedbackGain = Math.random().toFixed(2);
-    this.ansWetDryVal = Ans.generatePercentAnswer(0,1);
+    // this.ansFeedbackGain = Math.random().toFixed(2);
+    // TODO for now: limit feedback
+    this.ansFeedbackGain = Math.random() * 0.7;
+    this.ansWetDryVal = Ans.generatePercentAnswer(0.1, 1);
     console.log(
                 "delayTime Ans: ", this.ansDelayTimeVal,
                 "\nfdbk gain Ans: ", this.ansFeedbackGain,
